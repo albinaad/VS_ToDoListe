@@ -7,30 +7,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To Do Liste</title>
-    <link rel="stylesheet" href="ToDoSytle.css">
+    <link rel="stylesheet" href="ToDoStyle.css">
 </head>
 <body>
 
-    <div class="liste">
-      <h1>TO-DO LISTE</h1>
-      <!-- Neues To Do anlegen mit einem Textfeld und einem Submit Button. -->
-       <input name="neues-to-do" id="neues-to-do" type="text" placeholder="Was ist zu tun?"><button class="hinzuButton" id="hinzufügen">Hinzufügen</button>
+  <div class="liste">
+    <h1>TO-DO LISTE</h1>
 
-      <!-- Liste der To Do die noch zu erledigen sind. -->
-      <h3>TO-DO</h3>
-        <ul id="anstehendes-to-do">
-          <li> <input type="checkbox"><label> Programmieren</label> <button class="ändern">Ändern</button> <button class="löschen">Löschen</button></li>
-        </ul>
+    <input type="text" placeholder="Was ist zu tun?" id="benutzerInput">
+    <button id="enter">Hinzufügen</button>
 
-      <h3>ERLEDIGT</h3>  
-        <ul id="erledigtes-to-do">
-          <li> <input type="checkbox" checked> <label>GitHub Account erstellen</label> <button class="ändern">Ändern</button> <button class="löschen">Löschen</button></li>
-        </ul>
+    <!-- Noch zu erledigende To-Do's -->
+    <h3>TO-DO</h3>
+    <ul id="anstehendeToDo">
+    </ul>
 
-    </div>
-    
-    <!-- Referenz zur JS Datei  -->
-    <script src="ToDo.js"></script>
+  </div>
+
+
+<!-- Referenz zur JS Datei  -->
+<script src="ToDo.js"></script>
 
 </body>
 </html>
