@@ -1,0 +1,42 @@
+<!-- To Do Liste Gerüst -->
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do Liste</title>
+</head>
+<body>
+
+    <h1>To Do Liste</h1>
+         
+    <div class="Liste">
+      <!-- Neues To Do anlegen mit einem Textfeld und einem Submit Button. -->
+        <p>
+         <label for="neues-to-do">Was ist zu tun?</label>
+         <form id="neues-to-do">
+            <input type="text" id="neues-to-do" placeholder="Bitte gib dein To-Do ein..">
+            <input type="submit" id="neues-to-do" value="Hinzufügen" />
+         </form>
+      </p>
+
+      <!-- Liste der To Do die noch zu erledigen sind. -->
+
+      <h3>To Do</h3>
+        <ul id="anstehendes-to-do">
+            <!-- <li> <input type="checkbox"></li> -->
+        </ul>
+
+      <h3>Erledigt</h3>  
+        <ul id="erledigtes-to-do">
+         <!-- <li> <input type="checkbox" checked></li> -->
+        </ul>
+
+    </div>
+    
+    <script src="ToDo.js"></script>
+
+</body>
+</html>
