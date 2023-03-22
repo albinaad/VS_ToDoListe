@@ -7,35 +7,29 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To Do Liste</title>
+    <link rel="stylesheet" href="ToDoSytle.css">
 </head>
 <body>
 
-    <h1>To Do Liste</h1>
-         
-    <div class="Liste">
+    <div class="liste">
+      <h1>TO-DO LISTE</h1>
       <!-- Neues To Do anlegen mit einem Textfeld und einem Submit Button. -->
-        <p>
-         <label for="neues-to-do">Was ist zu tun?</label>
-         <form id="neues-to-do">
-            <input type="text" id="neues-to-do" placeholder="Bitte gib dein To-Do ein..">
-            <input type="submit" id="neues-to-do" value="Hinzufügen" />
-         </form>
-      </p>
+       <input name="neues-to-do" id="neues-to-do" type="text" placeholder="Was ist zu tun?"><button class="hinzuButton" id="hinzufügen">Hinzufügen</button>
 
       <!-- Liste der To Do die noch zu erledigen sind. -->
-
-      <h3>To Do</h3>
+      <h3>TO-DO</h3>
         <ul id="anstehendes-to-do">
-            <!-- <li> <input type="checkbox"></li> -->
+          <li> <input type="checkbox"><label> Programmieren</label> <button class="ändern">Ändern</button> <button class="löschen">Löschen</button></li>
         </ul>
 
-      <h3>Erledigt</h3>  
+      <h3>ERLEDIGT</h3>  
         <ul id="erledigtes-to-do">
-         <!-- <li> <input type="checkbox" checked></li> -->
+          <li> <input type="checkbox" checked> <label>GitHub Account erstellen</label> <button class="ändern">Ändern</button> <button class="löschen">Löschen</button></li>
         </ul>
 
     </div>
     
+    <!-- Referenz zur JS Datei  -->
     <script src="ToDo.js"></script>
 
 </body>
