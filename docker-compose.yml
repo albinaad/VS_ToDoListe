@@ -1,0 +1,33 @@
+version: '3.3'
+services:
+  server:
+    build: server
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: qendresaalbina
+      MYSQL_PASSWORD: qendresaalbina2021
+      MYSQL_HOSTNAME: tododb
+    links:
+      - tododb
+    depends_on:
+      - tododb
+  tododb:
+    # Use of a modified datbase in 'db'-folder.
+    # See README.md for more information.
+    build: db
+    restart: always
+    environment:
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: qendresaalbina
+      MYSQL_PASSWORD: qendresaalbina2021
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - 8085:80
+    environment:
+      PMA_HOST: tododb
