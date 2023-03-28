@@ -13,6 +13,97 @@
 </head>
 <body>
     
+  <div class="liste">
+    <!-- Überschrift -->
+    <h1>TO-DO LISTE</h1>
+    <br>
+
+    <!-- Button zum manuellen laden -->
+    <button id="manuellesLaden" type="button" onclick="loadDoc()">Manual refresh</button>
+    <br><br>
+
+    <!-- To-Do-Liste wird hier angezeigt -->
+    <div id="target">
+    </div>
+    <br><br>
+
+    <!-- JavaScript Teil für die To-Do-Liste -->
+    <script>
+
+      // LoadDoc() Funktion lädt die Daten in die Tabelle
+      function loadDoc() {
+           var xhttp = new XMLHttpRequest();
+           xhttp.onreadystatechange = function () {
+               if (this.readyState == 4 && this.status == 200) {
+            
+               var row = JSON.parse(this.responseText);
+               var txt = "<table class='table table-hover'>";
+               txt += "<tr><td></td><td><input id='todo' type='text' name='todo' class='form-control' value='To-Do'></td><td><input id='datum' type='date' name='datum' class='form-control' value='Datum'></td><td></td><td> <button class='btn btn-default' onclick='addRow()'>Hinzufügen</button> </td></tr>"  
+               txt += "<tr><th scope='col'>ID (id)</th><th scope='col'>To-Do (todo)</th><th scope='col'>Datum (datum)</th><th scope='col'>Action</th></tr>"
+               for (var x in row) {
+                 txt += "<tr><td>" + row[x].id + "</td><td>" + row[x].todo + "</td><td>" + row[x].datum + "</td><td> <button class='btn' onclick='deleteRow(" + row[x].id + ")'>DELETE</button> </td></tr>";
+                }
+               txt += "</table"
+
+               document.getElementById("target").innerHTML = txt;
+               }
+            };
+        xhttp.open("GET", "../database", true);
+        xhttp.send();
+      }
+      
+      // Löschfunktion
+      function deleteRow(id) {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var answer = JSON.parse(this.responseText);
+                        showSuccessAlert('Successfully deleted item:' + id + '; Message from server: ' + this.responseText);
+                    } else if (this.readyState == 4 && this.status == 500) {
+                        var error = JSON.parse(this.responseText);
+                        console.log("ERROR: ", error);
+                        showErrorAlert('ERROR on deleted item:' + id + '; Message from server: ' + this.responseText);
+                    }
+                    loadDoc();
+                };
+                xhttp.open("DELETE", "../database/" + id, true);
+                xhttp.send();
+            }
+   
+   // Hinzufügen-Funktion
+   function addRow() {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "../database", true);
+      xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+      var data_to_send = {
+      todo: "",
+      datum: ""
+      }
+      data_to_send.todo = document.getElementById("todo").value;
+      data_to_send.datum = document.getElementById("datum").value;
+      xhr.send(JSON.stringify(data_to_send));
+
+      xhr.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          var answer = JSON.parse(this.responseText);
+          showSuccessAlert('Successfully added item with todo:' + data_to_send.todo + '; datum: ' + data_to_send.datum + ' ; Message from server: ' + this.responseText);
+        } else if (this.readyState == 4 && this.status == 500) {
+          var error = JSON.parse(this.responseText);
+          console.log("ERROR: ", error);
+          showErrorAlert('ERROR on adding new item - message from server: ' + this.responseText);
+        }
+        // reload table
+        loadDoc();
+      };
+
+     }
+
+    // load the table at the start
+    loadDoc();
+   
+   
+   </script>
+
    
 
 </body>
