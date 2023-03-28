@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: tododb
--- Erstellungszeit: 28. Mrz 2023 um 12:24
+-- Erstellungszeit: 28. Mrz 2023 um 12:32
 -- Server-Version: 10.11.2-MariaDB-1:10.11.2+maria~ubu2204
 -- PHP-Version: 8.0.19
 
@@ -29,7 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `table1` (
   `id` int(11) NOT NULL,
-  `to-do` varchar(255) NOT NULL,
+  `todo` varchar(255) NOT NULL,
   `datum` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 

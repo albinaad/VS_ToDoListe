@@ -115,7 +115,7 @@ app.delete('/database/:id', (req, res) => {
 
     // Actual executing the query to delete it from the server
     // Please keep in mind to secure this for SQL injection!
-    connection.query("DELETE FROM `table1` WHERE `table1`.`task_id` = " + id + ";", function (error, results, fields) {
+    connection.query("DELETE FROM `table1` WHERE `table1`.`id` = " + id + ";", function (error, results, fields) {
         if (error) {
             // we got an errror - inform the client
             console.error(error); // <- log error in server
@@ -136,12 +136,12 @@ app.post('/database', (req, res) => {
     if (typeof req.body !== "undefined" && typeof req.body.title !== "undefined" && typeof req.body.description !== "undefined") {
         // The content looks good, so move on
         // Get the content to local variables:
-        var title = req.body.title;
-        var description = req.body.description;
-        console.log("Client send database insert request with 'title': " + title + " ; description: " + description); // <- log to server
+        var todo = req.body.todo;
+        var datum = req.body.datum;
+        console.log("Client send database insert request with 'todo': " + todo + " ; datum: " + datum); // <- log to server
         // Actual executing the query. Please keep in mind that this is for learning and education.
         // In real production environment, this has to be secure for SQL injection!
-        connection.query("INSERT INTO `table1` (`task_id`, `title`, `description`, `created_at`) VALUES (NULL, '" + title + "', '" + description + "', current_timestamp());", function (error, results, fields) {
+        connection.query("INSERT INTO `table1` (`id`, `todo`, `datum`) VALUES (NULL, '" + todo + "', '" + datum + "' ", function (error, results, fields) {
             if (error) {
                 // we got an errror - inform the client
                 console.error(error); // <- log error in server
@@ -158,7 +158,7 @@ app.post('/database', (req, res) => {
         // There is nobody with a title nor description
         console.error("Client send no correct data!")
         // Set HTTP Status -> 400 is client error -> and send message
-        res.status(400).json({ message: 'This function requries a body with "title" and "description' });
+        res.status(400).json({ message: 'This function requries a body with "todo" and "datum' });
     }
 });
 // ###################### DATABASE PART END ######################
