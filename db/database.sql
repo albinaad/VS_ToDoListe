@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: tododb
--- Erstellungszeit: 27. Mrz 2023 um 21:47
+-- Erstellungszeit: 28. Mrz 2023 um 12:24
 -- Server-Version: 10.11.2-MariaDB-1:10.11.2+maria~ubu2204
 -- PHP-Version: 8.0.19
 
@@ -24,13 +24,13 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `todoliste`
+-- Tabellenstruktur für Tabelle `table1`
 --
 
-CREATE TABLE `todoliste` (
-  `ID` int(11) NOT NULL,
-  `To-Do` varchar(100) NOT NULL,
-  `Datum` date NOT NULL
+CREATE TABLE `table1` (
+  `id` int(11) NOT NULL,
+  `to-do` varchar(255) NOT NULL,
+  `datum` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -38,10 +38,10 @@ CREATE TABLE `todoliste` (
 --
 
 --
--- Indizes für die Tabelle `todoliste`
+-- Indizes für die Tabelle `table1`
 --
-ALTER TABLE `todoliste`
-  ADD PRIMARY KEY (`ID`);
+ALTER TABLE `table1`
+  ADD PRIMARY KEY (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
