@@ -63,9 +63,10 @@
                         // debugger; // <- you can use the debugger for better developing in the browser
                         // console.log(this.responseText); // this can also help durring debugging in the console of the browser
                         // console.log(JSON.parse(this.responseText)); // even function output like JSON is visible in the browser console
-
+                        
                         // Parse the JSON answer from the server:
                         var row = JSON.parse(this.responseText);
+                        console.log(row);
                         // Start the HTML table that should be displayed:
                         var txt = "<table class='table table-striped table-hover'>";
                         // add the table hader to it
