@@ -15,20 +15,8 @@ var dbInfo = {
 
 var connection = mysql.createPool(dbInfo);
 console.log("Conecting to database...");
-// connection.connect(); <- connect not required in connection pool
 
-// SQL Database init.
-// In this current demo, this is done by the "database.sql" file which is stored in the "db"-container (./db/).
-// Alternative you could use the mariadb basic sample and do the following steps here:
-/*
-connection.query("CREATE TABLE IF NOT EXISTS table1 (task_id INT AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255) NOT NULL, description TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)  ENGINE=INNODB;", function (error, results, fields) {
-    if (error) throw error;
-    console.log('Answer: ', results);
-});
-*/
-// See readme.md for more information about that.
-
-// Check the connection
+// Connection überprüfen
 connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
     if (error) throw error; // <- this will throw the error and exit normally
     // check the solution - should be 2
@@ -54,7 +42,7 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Entrypoint - call it with: http://localhost:8080/ -> redirect you to http://localhost:8080/static
+// Entrypoint 
 app.get('/', (req, res) => {
     console.log("Got a request and redirect it to the static page");
     // redirect will send the client to another path / route. In this case to the static route.
