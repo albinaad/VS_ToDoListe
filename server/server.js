@@ -231,14 +231,16 @@ app.post('/registrierung', (req, res) => {
                 // INFO: Here can be some checks of modification of the result
                 res.status(200).json(results); // <- send it to client
             }
-        });
-    }
+              
+        }); 
+    } 
+    
     else {
         console.error("Client send no correct data!")
         // Set HTTP Status -> 400 is client error -> and send message
         res.status(400).json({ message: 'Alle Felder müssen ausgefüllt werden!' });
-    }
-});
+    } 
+}); 
 
 
 
