@@ -41,8 +41,8 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Bcrypt und SALT Runden festlegen
-const SALT_ROUNDS = 10;
+// Bcrypt anlegen
+const bcrypt = require('bcryptjs');
 
 // Entrypoint 
 app.get('/', (req, res) => {
@@ -207,8 +207,9 @@ app.post('/registrierung', (req, res) => {
         var password = req.body.password;
         var passwordWiederholen = req.body.passwordWiederholen;
 
-        // passwordHash anlegen
-        const passwordHash = bcrypt.hash(password, SALT_ROUNDS);
+        // saltRounds und passwordHash anlegen
+        const saltRounds = bcrypt.genSaltSync(10);
+        var passwordHash = bcrypt.hashSync(password, saltRounds);
                 
         connection.query("INSERT INTO `user` (`user_id`, `benutzername`, `email`, `password`) VALUES (NULL, '" + benutzername + "', '" + email + "', '" + passwordHash + "');", function (error, results, fields) {
             if (error) {
