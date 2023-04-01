@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: meinecooledb
--- Erstellungszeit: 29. Mrz 2023 um 20:55
+-- Erstellungszeit: 01. Apr 2023 um 13:14
 -- Server-Version: 10.11.2-MariaDB-1:10.11.2+maria~ubu2204
 -- PHP-Version: 8.0.19
 
@@ -46,23 +46,15 @@ INSERT INTO `table1` (`task_id`, `title`, `description`, `created_at`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `todoliste`
+-- Tabellenstruktur für Tabelle `user`
 --
 
-CREATE TABLE `todoliste` (
-  `todo_id` int(11) NOT NULL,
-  `todo` varchar(255) NOT NULL,
-  `datum` date NOT NULL
+CREATE TABLE `user` (
+  `user_id` int(11) NOT NULL,
+  `benutzername` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Daten für Tabelle `todoliste`
---
-
-INSERT INTO `todoliste` (`todo_id`, `todo`, `datum`) VALUES
-(1, 'Buch lesen.', '2023-03-29'),
-(2, 'Projekt programmieren.', '2023-05-07'),
-(3, 'Vorlesung besuchen.', '2023-03-30');
 
 --
 -- Indizes der exportierten Tabellen
@@ -75,10 +67,11 @@ ALTER TABLE `table1`
   ADD PRIMARY KEY (`task_id`);
 
 --
--- Indizes für die Tabelle `todoliste`
+-- Indizes für die Tabelle `user`
 --
-ALTER TABLE `todoliste`
-  ADD PRIMARY KEY (`todo_id`);
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- AUTO_INCREMENT für exportierte Tabellen
@@ -91,10 +84,10 @@ ALTER TABLE `table1`
   MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT für Tabelle `todoliste`
+-- AUTO_INCREMENT für Tabelle `user`
 --
-ALTER TABLE `todoliste`
-  MODIFY `todo_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+ALTER TABLE `user`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
