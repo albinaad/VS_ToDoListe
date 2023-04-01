@@ -44,6 +44,9 @@ app.use(express.json());
 // Bcrypt anlegen
 const bcrypt = require('bcryptjs');
 
+// View Engine zum rendern
+app.set('view engine', 'pug');
+
 // Entrypoint 
 app.get('/', (req, res) => {
     console.log("Got a request and redirect it to the static page");
@@ -201,11 +204,17 @@ app.get('/registrierung', (req, res) => {
 
 // POST User Datenbank
 app.post('/registrierung', (req, res) => {
+
     if (typeof req.body !== "undefined" && typeof req.body.benutzername !== "undefined" && typeof req.body.email !== "undefined" && typeof req.body.password !== "undefined" && typeof req.body.passwordWiederholen) {
         var benutzername = req.body.benutzername;
         var email = req.body.email;
         var password = req.body.password;
         var passwordWiederholen = req.body.passwordWiederholen;
+
+        if (password != passwordWiederholen) {
+            res.redirect("/static/registrierung.html");
+            return;
+        }
 
         // saltRounds und passwordHash anlegen
         const saltRounds = bcrypt.genSaltSync(10);
