@@ -30,7 +30,6 @@ connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
     }
 });
 
-
 // Constants
 const PORT = process.env.PORT || 8080;
 const HOST = '0.0.0.0';
@@ -41,6 +40,9 @@ const app = express();
 // Features for JSON Body
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Bcrypt und SALT Runden festlegen
+const SALT_ROUNDS = 10;
 
 // Entrypoint 
 app.get('/', (req, res) => {
@@ -177,6 +179,56 @@ app.post('/database', (req, res) => {
 });
 // ###################### DATABASE PART END ######################
 
+// Datenbankteil für die Registrierung 
+// GET User Datenbank
+app.get('/registrierung', (req, res) => {
+    console.log("Request to load User with user_id" + req.params.user_id);
+    
+    // Prepare the get query
+    connection.query("SELECT user_id, benutzername, email FROM `user`;", function (error, results, fields) {
+        if (error) {
+            // we got an errror - inform the client
+            console.error(error); // <- log error in server
+            res.status(500).json(error); // <- send to client
+        } else {
+            // we got no error - send it to the client
+            console.log('Success answer from DB: ', results); // <- log results in console
+            // INFO: Here could be some code to modify the result
+            res.status(200).json(results); // <- send it to client
+        }
+    });
+});
+
+// POST User Datenbank
+app.post('/registrierung', (req, res) => {
+    if (typeof req.body !== "undefined" && typeof req.body.benutzername !== "undefined" && typeof req.body.email !== "undefined" && typeof req.body.password !== "undefined" && typeof req.body.passwordWiederholen) {
+        var benutzername = req.body.benutzername;
+        var email = req.body.email;
+        var password = req.body.password;
+        var passwordWiederholen = req.body.passwordWiederholen;
+
+        // passwordHash anlegen
+        const passwordHash = bcrypt.hash(password, SALT_ROUNDS);
+                
+        connection.query("INSERT INTO `user` (`user_id`, `benutzername`, `email`, `password`) VALUES (NULL, '" + benutzername + "', '" + email + "', '" + passwordHash + "');", function (error, results, fields) {
+            if (error) {
+                // we got an errror - inform the client
+                console.error(error); // <- log error in server
+                res.status(500).json(error); // <- send to client
+            } else {
+                // Everything is fine with the query
+                console.log('Success answer: ', results); // <- log results in console
+                // INFO: Here can be some checks of modification of the result
+                res.status(200).json(results); // <- send it to client
+            }
+        });
+    }
+    else {
+        console.error("Client send no correct data!")
+        // Set HTTP Status -> 400 is client error -> and send message
+        res.status(400).json({ message: 'Alle Felder müssen ausgefüllt werden!' });
+    }
+});
 
 
 
