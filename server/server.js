@@ -202,16 +202,24 @@ app.get('/registrierung', (req, res) => {
     });
 });
 
+// Email sollte im Email-Format sein
+function isEmailValid(email) {
+    // Regulärer Ausdruck für E-Mail-Format-Validierung
+    const emailRegEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegEx.test(email);
+}
+
 // POST User Datenbank
 app.post('/registrierung', (req, res) => {
 
-    if (typeof req.body !== "undefined" && typeof req.body.benutzername !== "undefined" && typeof req.body.email !== "undefined" && typeof req.body.password !== "undefined" && typeof req.body.passwordWiederholen) {
+    if (typeof req.body !== "undefined" && typeof req.body.benutzername !== "undefined" && typeof req.body.email !== "undefined" && isEmailValid(req.body.email) &&typeof req.body.password !== "undefined" && typeof req.body.passwordWiederholen) {
         var benutzername = req.body.benutzername;
         var email = req.body.email;
         var password = req.body.password;
         var passwordWiederholen = req.body.passwordWiederholen;
 
         if (password != passwordWiederholen) {
+            console.error('Passwörter stimmen nicht überein.');
             res.redirect("/static/registrierung.html");
             return;
         }
@@ -229,17 +237,17 @@ app.post('/registrierung', (req, res) => {
                 // Everything is fine with the query
                 console.log('Success answer: ', results); // <- log results in console
                 // INFO: Here can be some checks of modification of the result
-                res.status(200).json(results); // <- send it to client
             }
-              
+            res.redirect("/static/database.html"); 
         }); 
     } 
     
     else {
         console.error("Client send no correct data!")
         // Set HTTP Status -> 400 is client error -> and send message
-        res.status(400).json({ message: 'Alle Felder müssen ausgefüllt werden!' });
+        res.status(400).json({ message: 'Alle Felder müssen korrekt ausgefüllt werden!' });
     } 
+
 }); 
 
 

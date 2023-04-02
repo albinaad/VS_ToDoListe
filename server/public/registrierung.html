@@ -71,6 +71,21 @@
            document.getElementById("fehlermeldung").innerHTML = '<div class="alert alert-danger" role="alert">' + message + '</div>';
         }
 
+        var xhr = new XMLHttpRequest();
+        // define the type POST to the url "../database" - we are in 'static/database'
+        xhr.open("POST", "../registrierung", true);
+        // define that the content will be JSON (serialization)
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        // prepare the structure of the message
+        var data_to_send = {
+            benutzername: "",
+            email: "",
+            password: "",
+        }
+        // Load from the inputfields on this page:
+        data_to_send.benutzername = document.getElementById("benutzername").value;
+        data_to_send.email = document.getElementById("email").value;
+        data_to_send.password = document.getElementById("password").value;
 
 
     </script>
