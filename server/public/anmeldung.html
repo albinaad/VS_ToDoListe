@@ -56,6 +56,27 @@
 
         </form>
     </div>
-    
+
+    <script>
+
+        var xhr = new XMLHttpRequest();
+        // define the type POST to the url "../anmeldung" - we are in 'static/anmeldung'
+        xhr.open("POST", "../anmeldung", true);
+        // define that the content will be JSON (serialization)
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        // prepare the structure of the message
+        var data_to_send = {
+            email: "",
+            password: "",
+        }
+        // Load from the inputfields on this page:
+        data_to_send.email = document.getElementById("email").value;
+        data_to_send.password = document.getElementById("password").value;
+
+
+
+    </script>
+
+
 </body>
 </html>
