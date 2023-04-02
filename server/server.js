@@ -335,6 +335,19 @@ app.get('/database', (req, res) => {
     }
 });
 
+//Ausloggen und Session beenden
+app.get('/logout', (req, res) => {
+    req.session.destroy((error) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json(error); // <- send to client
+        return;
+      }
+  
+      res.redirect('/');
+    });
+  });
+
 
 // All requests to /static/... will be redirected to static files in the folder "public"
 // call it with: http://localhost:8080/static

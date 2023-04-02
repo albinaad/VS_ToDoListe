@@ -14,14 +14,25 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/navbar.css">
 </head>
 
 <body>
 
+     <!-- Navigationbar -->
+     <nav>
+        <ul id="navStartseite">
+            <li>To-Do App</li>
+        </ul>
+        <form action="/logout" method="GET" id="ausloggenButton">
+            <button type="submit" class="btn btn-light">Ausloggen</button>
+        </form>
+    </nav>
+
     <!-- The container is for the theme / deisgn -->
     <main role="main" class="container">
 
-
+        <br>
         <h1>Database</h1>
 
         <h2>Values from 'table1'</h2>

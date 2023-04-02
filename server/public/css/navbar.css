@@ -36,3 +36,8 @@ a:hover {
     color: black;
     text-decoration: none;
 }
+
+#ausloggenButton {
+    float: right;
+    margin: 13px;
+}
