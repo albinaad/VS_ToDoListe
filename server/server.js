@@ -1,6 +1,8 @@
 'use strict';
 
 const express = require('express');
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
 
 // Database
 const mysql = require('mysql');
@@ -35,7 +37,7 @@ const PORT = process.env.PORT || 8080;
 const HOST = '0.0.0.0';
 
 // App
-const app = express();
+const app = module.exports = express();
 
 // Features for JSON Body
 app.use(express.urlencoded({ extended: true }));
@@ -44,8 +46,27 @@ app.use(express.json());
 // Bcrypt anlegen
 const bcrypt = require('bcryptjs');
 
-// View Engine zum rendern
-app.set('view engine', 'pug');
+// Konfiguration Express Session Middleware
+const options = {
+    host: 'meinecooledb',
+    port: 3306,
+    user: 'exampleuser',
+    password: 'examplepass',
+    database: 'exampledb',
+    clearExpired: true,
+    checkExpirationInterval: 900000, // 15 Minuten
+    expiration: 86400000 // 1 Tag
+};
+
+const sessionStore = new MySQLStore(options);
+
+app.use(session({
+	key: 'session_cookie_name',
+	secret: 'session_cookie_secret',
+	store: sessionStore,
+	resave: false,
+	saveUninitialized: false
+}));
 
 // Entrypoint 
 app.get('/', (req, res) => {
@@ -238,7 +259,7 @@ app.post('/registrierung', (req, res) => {
                 console.log('Success answer: ', results); // <- log results in console
                 // INFO: Here can be some checks of modification of the result
             }
-            res.redirect("/static/database.html"); 
+            res.redirect("/static/erfolgreicheReg.html"); 
         }); 
     } 
     
@@ -250,6 +271,69 @@ app.post('/registrierung', (req, res) => {
 
 }); 
 
+
+// LOGIN
+// POST für Login
+app.post('/anmeldung', (req, res) => {
+
+    if (typeof req.body !== "undefined" && typeof req.body.email !== "undefined" && typeof req.body.password !== "undefined") {
+        var email = req.body.email;
+        var password = req.body.password;
+
+        connection.query("SELECT * FROM user WHERE email = ?", [email], (error, result) => {
+            if (error) {
+                // we got an errror - inform the client
+                console.error(error); // <- log error in server
+                res.status(500).json(error); // <- send to client
+                return;
+            } 
+
+            // Benutzer vorhanden?
+            if (result.length === 0) {
+                res.status(401).json('Ungültige Email oder Passwort.');
+                return;
+            }
+
+            //Vergleiche Password und HashPassword
+            bcrypt.compare(password, result[0].password, (error, match) => {
+                if (error) {
+                    // we got an errror - inform the client
+                    console.error(error); // <- log error in server
+                    res.status(500).json(error); // <- send to client
+                    return;
+                } 
+
+                if(!match) {
+                    res.status(401).json('Ungültige Email oder Passwort.');
+                    return;
+                }
+
+                //Benutzer angemeldet
+                req.session.loggedin = true;
+                req.session.email = email;
+
+                res.redirect("/database");
+            });
+
+
+        });
+    }
+
+    else {
+        console.error("Client send no correct data!")
+        // Set HTTP Status -> 400 is client error -> and send message
+        res.status(400).json({ message: 'Alle Felder müssen korrekt ausgefüllt werden!' });
+    } 
+
+});
+
+// Überprüfen ob User eingeloggt (Database)
+app.get('/database', (req, res) => {
+    if (!req.session.loggedin) {
+      res.redirect('/login');
+      return;
+    }
+});
 
 
 // All requests to /static/... will be redirected to static files in the folder "public"

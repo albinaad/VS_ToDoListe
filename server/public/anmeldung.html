@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anmeldung</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/anmeldung.css">
+</head>
+<body>
+
+    <!-- Navigationbar -->
+    <nav>
+        <ul id="navStartseite">
+            <li><a href="index.html">To-Do App</a></li>
+        </ul>
+        <ul id="navLogin">
+            <li><a  href="index.html">Startseite</a></li>
+            <li><a class="active" href="anmeldung.html">Anmelden</a></li>
+            <li><a href="registrierung.html">Registrieren</a></li>
+        </ul>
+    </nav>
+
+    <!-- Fehlermeldung -->
+    <div id="fehlermeldung">
+    </div>
+
+    <!-- Registrierungsformular -->
+    <div class="anmeldeformular">
+        
+        <h1>Login</h1>
+        <p>Bitte füllen Sie das Formular aus um sich anzumelden.</p>
+        <hr>
+       
+        <form action="/anmeldung" method="post">
+
+            <label for="email">E-Mail</label>
+            <input type="text" id="email" name="email" placeholder="E-Mail eingeben">
+
+            <label for="password">Passwort</label>
+            <input type="password" id="password" name="password" placeholder="Passwort eingeben">
+
+
+            <div class="submitButton">
+                <button type="submit">Anmelden</button>
+            </div>
+
+            <div class="accountNichtVorhanden">
+               <p>Noch kein Account vorhanden? <a href="registrierung.html">Hier registrieren</a>.</p>
+            </div>
+
+        </form>
+    
+</body>
+</html>

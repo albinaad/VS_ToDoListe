@@ -1,0 +1,75 @@
+body {
+    background-image: url("../img/background.jpg");
+    background-size: cover;
+}
+
+* {box-sizing: border-box}
+
+h1 {
+    font-size: 30px;
+    padding-top: 8px;
+}
+
+hr {
+    border: 0.9px solid #000000;
+    margin-bottom: 25px;
+}
+
+.anmeldeformular {
+    background-color: rgba(255,255,255,0.8);
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    padding: 16px;
+    width: 50%;
+    margin: 0px auto;
+    margin-top: 5%;
+    border-radius: 20px;
+}
+
+input[type=text], input[type=password] {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    background: #ffffff;
+    font-size: small;
+    display: block;
+    border-radius: 10px;
+    border: none;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+    background-color: #ededed;
+    outline: none;
+}
+
+label {
+    font-size: small;
+}
+
+button {
+    background-color: #333333;
+    color: white;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.8;
+    border-radius: 10px;
+}
+
+button:hover {
+    opacity:1;
+}
+  
+a {
+    color: black;
+}
+
+a:hover {
+    color: steelblue;
+}
+  
+.accountNichtVorhanden {
+    text-align: center;
+    margin-top: 15px;
+}
