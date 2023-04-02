@@ -312,7 +312,7 @@ app.post('/anmeldung', (req, res) => {
                 req.session.loggedin = true;
                 req.session.email = email;
 
-                res.redirect("/database");
+                res.redirect("/static/database.html");
             });
 
 
