@@ -130,19 +130,37 @@ app.get('/button2', (req, res) => {
 
 // ###################### DATABASE PART ######################
 // GET path for database
-app.get('/database', (req, res) => {
-    console.log("Request to load all entries from table1");
+//app.get('/database', (req, res) => {
+ //   console.log("Request to load all entries from table1");
     // Prepare the get query
-    connection.query("SELECT * FROM `table1`;", function (error, results, fields) {
-        if (error) {
+  //  connection.query("SELECT * FROM `table1`;", function (error, results, fields) {
+  //      if (error) {
             // we got an errror - inform the client
-            console.error(error); // <- log error in server
-            res.status(500).json(error); // <- send to client
-        } else {
-            // we got no error - send it to the client
-            console.log('Success answer from DB: ', results); // <- log results in console
+    //        console.error(error); // <- log error in server
+     //       res.status(500).json(error); // <- send to client
+     //   } else {
+      //      // we got no error - send it to the client
+      //      console.log('Success answer from DB: ', results); // <- log results in console
             // INFO: Here could be some code to modify the result
-            res.status(200).json(results); // <- send it to client
+       //     res.status(200).json(results); // <- send it to client
+      //  }
+   // });
+//});
+
+app.get('/database', function(req, res) {
+    // get the userid parameter from the session
+    const userId = req.session.userId;
+    // execute the query with the userid parameter
+    connection.query("SELECT * FROM `table1` WHERE user_userId = ?", [userId], function(error, results, fields) {
+        // handle the error, if any
+        if (error) {
+            res.status(500).json(error);
+            return;
+        } else {
+          // we got no error - send it to the client
+          console.log('Success answer from DB: ', results); // <- log results in console
+          // INFO: Here could be some code to modify the result
+          res.status(200).json(results); // <- send it to client
         }
     });
 });
@@ -176,12 +194,13 @@ app.post('/database', (req, res) => {
     if (typeof req.body !== "undefined" && typeof req.body.title !== "undefined" && typeof req.body.description !== "undefined") {
         // The content looks good, so move on
         // Get the content to local variables:
+        var user_userId = req.session.userId;
         var title = req.body.title;
         var description = req.body.description;
         console.log("Client send database insert request with 'title': " + title + " ; description: " + description); // <- log to server
         // Actual executing the query. Please keep in mind that this is for learning and education.
         // In real production environment, this has to be secure for SQL injection!
-        connection.query("INSERT INTO `table1` (`task_id`, `title`, `description`, `created_at`) VALUES (NULL, '" + title + "', '" + description + "', current_timestamp());", function (error, results, fields) {
+        connection.query("INSERT INTO `table1` (`task_id`, `user_userID`, `title`, `description`, `created_at`) VALUES (NULL, '" + user_userId +"', '" + title + "', '" + description + "', current_timestamp());", function (error, results, fields) {
             if (error) {
                 // we got an errror - inform the client
                 console.error(error); // <- log error in server
@@ -206,10 +225,10 @@ app.post('/database', (req, res) => {
 // Datenbankteil für die Registrierung 
 // GET User Datenbank
 app.get('/registrierung', (req, res) => {
-    console.log("Request to load User with user_id" + req.params.user_id);
+    console.log("Request to load User with userId" + req.params.userId);
     
     // Prepare the get query
-    connection.query("SELECT user_id, benutzername, email FROM `user`;", function (error, results, fields) {
+    connection.query("SELECT userId, benutzername, email FROM `user`;", function (error, results, fields) {
         if (error) {
             // we got an errror - inform the client
             console.error(error); // <- log error in server
@@ -249,7 +268,7 @@ app.post('/registrierung', (req, res) => {
         const saltRounds = bcrypt.genSaltSync(10);
         var passwordHash = bcrypt.hashSync(password, saltRounds);
                 
-        connection.query("INSERT INTO `user` (`user_id`, `benutzername`, `email`, `password`) VALUES (NULL, '" + benutzername + "', '" + email + "', '" + passwordHash + "');", function (error, results, fields) {
+        connection.query("INSERT INTO `user` (`userId`, `benutzername`, `email`, `password`) VALUES (NULL, '" + benutzername + "', '" + email + "', '" + passwordHash + "');", function (error, results, fields) {
             if (error) {
                 // we got an errror - inform the client
                 console.error(error); // <- log error in server
@@ -311,6 +330,7 @@ app.post('/anmeldung', (req, res) => {
                 //Benutzer angemeldet
                 req.session.loggedin = true;
                 req.session.email = email;
+                req.session.userId = result[0].userId;
 
                 res.redirect("/static/database.html");
             });

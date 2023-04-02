@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: meinecooledb
--- Erstellungszeit: 01. Apr 2023 um 13:14
+-- Erstellungszeit: 02. Apr 2023 um 23:36
 -- Server-Version: 10.11.2-MariaDB-1:10.11.2+maria~ubu2204
 -- PHP-Version: 8.0.19
 
@@ -24,24 +24,35 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `sessions`
+--
+
+CREATE TABLE `sessions` (
+  `session_id` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `expires` int(11) UNSIGNED NOT NULL,
+  `data` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `table1`
 --
 
 CREATE TABLE `table1` (
   `task_id` int(11) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `description` text DEFAULT NULL,
+  `user_userId` int(11) NOT NULL,
+  `title` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `description` text CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Daten für Tabelle `table1`
 --
 
-INSERT INTO `table1` (`task_id`, `title`, `description`, `created_at`) VALUES
-(1, 'Super titel', 'langer text', '2020-04-09 12:18:07'),
-(2, 'Anderer Titel', 'Super Text', '2020-04-09 12:18:43'),
-(3, 'Anderer Titel2', 'noch mehr text', '2020-04-09 12:18:57');
+INSERT INTO `table1` (`task_id`, `user_userId`, `title`, `description`, `created_at`) VALUES
+(1, 1, 'Buch lesen', 'Seite 200', '2023-04-02 23:36:22');
 
 -- --------------------------------------------------------
 
@@ -50,27 +61,41 @@ INSERT INTO `table1` (`task_id`, `title`, `description`, `created_at`) VALUES
 --
 
 CREATE TABLE `user` (
-  `user_id` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
   `benutzername` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Daten für Tabelle `user`
+--
+
+INSERT INTO `user` (`userId`, `benutzername`, `email`, `password`) VALUES
+(1, 'Albina', 'albina@test.de', '$2a$10$kd28.QRz4a34Bs9oeIGZ0.krGVCsCw5XcnWZswARt1HvDrzTTyYkm');
+
+--
 -- Indizes der exportierten Tabellen
 --
+
+--
+-- Indizes für die Tabelle `sessions`
+--
+ALTER TABLE `sessions`
+  ADD PRIMARY KEY (`session_id`);
 
 --
 -- Indizes für die Tabelle `table1`
 --
 ALTER TABLE `table1`
-  ADD PRIMARY KEY (`task_id`);
+  ADD PRIMARY KEY (`task_id`),
+  ADD KEY `user_userId` (`user_userId`);
 
 --
 -- Indizes für die Tabelle `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`user_id`),
+  ADD PRIMARY KEY (`userId`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
@@ -81,13 +106,23 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT für Tabelle `table1`
 --
 ALTER TABLE `table1`
-  MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT für Tabelle `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Constraints der exportierten Tabellen
+--
+
+--
+-- Constraints der Tabelle `table1`
+--
+ALTER TABLE `table1`
+  ADD CONSTRAINT `table1_ibfk_1` FOREIGN KEY (`user_userId`) REFERENCES `user` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
