@@ -330,7 +330,7 @@ app.post('/anmeldung', (req, res) => {
 // Überprüfen ob User eingeloggt (Database)
 app.get('/database', (req, res) => {
     if (!req.session.loggedin) {
-      res.redirect('/login');
+      res.redirect('/anmeldung.html');
       return;
     }
 });
