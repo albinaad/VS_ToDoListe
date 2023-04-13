@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: meinecooledb
--- Erstellungszeit: 02. Apr 2023 um 23:36
+-- Erstellungszeit: 13. Apr 2023 um 20:28
 -- Server-Version: 10.11.2-MariaDB-1:10.11.2+maria~ubu2204
 -- PHP-Version: 8.0.19
 
@@ -57,6 +57,18 @@ INSERT INTO `table1` (`task_id`, `user_userId`, `title`, `description`, `created
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `todoliste`
+--
+
+CREATE TABLE `todoliste` (
+  `listeId` int(11) NOT NULL,
+  `user_userId` int(11) NOT NULL,
+  `liste_title` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `user`
 --
 
@@ -92,6 +104,13 @@ ALTER TABLE `table1`
   ADD KEY `user_userId` (`user_userId`);
 
 --
+-- Indizes für die Tabelle `todoliste`
+--
+ALTER TABLE `todoliste`
+  ADD PRIMARY KEY (`listeId`),
+  ADD KEY `user_userId` (`user_userId`);
+
+--
 -- Indizes für die Tabelle `user`
 --
 ALTER TABLE `user`
@@ -109,6 +128,12 @@ ALTER TABLE `table1`
   MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT für Tabelle `todoliste`
+--
+ALTER TABLE `todoliste`
+  MODIFY `listeId` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT für Tabelle `user`
 --
 ALTER TABLE `user`
@@ -123,6 +148,12 @@ ALTER TABLE `user`
 --
 ALTER TABLE `table1`
   ADD CONSTRAINT `table1_ibfk_1` FOREIGN KEY (`user_userId`) REFERENCES `user` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints der Tabelle `todoliste`
+--
+ALTER TABLE `todoliste`
+  ADD CONSTRAINT `todoliste_ibfk_1` FOREIGN KEY (`user_userId`) REFERENCES `user` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

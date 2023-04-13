@@ -1,22 +1,23 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="de">
 <head>
-    <title>Database example</title>
-    <!-- The following is bootstrap: https://getbootstrap.com/docs/4.3/getting-started/introduction/ -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do Liste</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="css/navbar.css">
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+<link rel="stylesheet" href="css/navbar.css">
 </head>
-
 <body>
 
      <!-- Navigationbar -->
@@ -29,14 +30,14 @@
         </form>
     </nav>
 
-    <!-- The container is for the theme / deisgn -->
-    <main role="main" class="container">
+     <!-- The container is for the theme / deisgn -->
+     <main role="main" class="container">
 
         <br>
-        <h1>Database</h1>
+        <h1>Meine To-Do Listen</h1>
+        <br>
 
-        <h2>Values from 'table1'</h2>
-        <button type="button" onclick="loadDoc()" class="btn btn-primary">Manual refresh</button>
+        <button type="button" onclick="loadDoc()" class="btn btn-outline-dark">Manuelles Laden</button>
         <br><br>
         <div id="target">
             <!-- Here will be the database displayed -->
@@ -79,15 +80,15 @@
                         var row = JSON.parse(this.responseText);
                         console.log(row);
                         // Start the HTML table that should be displayed:
-                        var txt = "<table class='table table-striped table-hover'>";
+                        var txt = "<table class='table table-hover'>";
                         // add the table hader to it
-                        txt += "<tr><th scope='col'>Task ID (task_id)</th><th scope='col'>Title (title)</th><th scope='col'>Description (description)</th><th scope='col'>Created at (created_at)</th><th scope='col'>Action</th></tr>"
+                        txt += "<tr><th scope='col'>Listen ID</th><th scope='col'>Title</th><th scope='col'>Aktion</th></tr>"
                         // Go through each row and add it to the table
                         for (var x in row) {
-                            txt += "<tr><td>" + row[x].task_id + "</td><td>" + row[x].title + "</td><td>" + row[x].description + "</td><td>" + row[x].created_at + "</td><td> <button class='btn btn-danger' onclick='deleteRow(" + row[x].task_id + ")'>DELETE</button> </td></tr>";
+                            txt += "<tr><td>" + row[x].listeId + "</td><td>" + row[x].liste_title + "</td><td> <button class='btn btn-danger' onclick='deleteRow(" + row[x].listeId + ")'>DELETE</button> </td></tr>";
                         }
                         // Now add a input row to add a new entry:
-                        txt += "<tr><td></td><td><input id='title' type='text' name='title' class='form-control' value='Title'></td><td><input id='description' type='text' name='description' class='form-control' value='Description'></td><td></td><td> <button class='btn btn-success' onclick='addRow()'>ADD</button> </td></tr>"
+                        txt += "<tr><td></td><td><input id='liste_title' type='text' name='liste_title' class='form-control' placeholder='Titel eingeben.'></td><td> <button class='btn btn-secondary' onclick='addRow()'>ADD</button> </td></tr>"
                         // end of the table:
                         txt += "</table>"
 
@@ -96,7 +97,7 @@
                 };
 
                 // create a URL with the userid parameter
-                var url = "../database?userId=" + userId;
+                var url = "../todoliste?userId=" + userId;
                 // the "../" is required because we're in "static" folder!
                 xhttp.open("GET", url, true);
                 xhttp.send();
@@ -110,19 +111,19 @@
                         // Parse the JSON answer from the server:
                         var answer = JSON.parse(this.responseText);
                         // Show success message:
-                        showSuccessAlert('Successfully deleted item:' + id + '; Message from server: ' + this.responseText);
+                        showSuccessAlert('Erfolgreich gelöscht!');
                     } else if (this.readyState == 4 && this.status == 500) {
                         // We got an error:
                         var error = JSON.parse(this.responseText);
                         console.log("ERROR: ", error);
                         // Show error alert:
-                        showErrorAlert('ERROR on deleted item:' + id + '; Message from server: ' + this.responseText);
+                        showErrorAlert('Eintrag konnte nicht gelöscht werden!');
                     }
                     // reload table
                     loadDoc();
                 };
                 // the "../" is required because we're in "static" folder!
-                xhttp.open("DELETE", "../database/" + id, true);
+                xhttp.open("DELETE", "../todoliste/" + id, true);
                 xhttp.send();
             }
 
@@ -131,17 +132,15 @@
                 // construct an HTTP request
                 var xhr = new XMLHttpRequest();
                 // define the type POST to the url "../database" - we are in 'static/database'
-                xhr.open("POST", "../database", true);
+                xhr.open("POST", "../todoliste", true);
                 // define that the content will be JSON (serialization)
                 xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
                 // prepare the structure of the message
                 var data_to_send = {
-                    title: "",
-                    description: ""
+                    liste_title: "",
                 }
                 // Load the title and description from the inputfields on this page:
-                data_to_send.title = document.getElementById("title").value;
-                data_to_send.description = document.getElementById("description").value;
+                data_to_send.liste_title = document.getElementById("liste_title").value;
                 // send the collected data as JSON
                 xhr.send(JSON.stringify(data_to_send));
 
@@ -151,13 +150,13 @@
                         // Parse the JSON answer from the server:
                         var answer = JSON.parse(this.responseText);
                         // Show success message:
-                        showSuccessAlert('Successfully added item with title:' + data_to_send.title + '; description: ' + data_to_send.description + ' ; Message from server: ' + this.responseText);
+                        showSuccessAlert('Eintrag erfolgreich hinzugefügt!');
                     } else if (this.readyState == 4 && this.status == 500) {
                         // We got an error:
                         var error = JSON.parse(this.responseText);
                         console.log("ERROR: ", error);
                         // Show error alert:
-                        showErrorAlert('ERROR on adding new item - message from server: ' + this.responseText);
+                        showErrorAlert('Fehler beim hinzugügen!');
                     }
                     // reload table
                     loadDoc();
@@ -170,6 +169,6 @@
         </script>
 
     </main><!-- /.container -->
+    
 </body>
-
 </html>

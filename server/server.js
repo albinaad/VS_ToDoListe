@@ -200,7 +200,7 @@ app.post('/database', (req, res) => {
         console.log("Client send database insert request with 'title': " + title + " ; description: " + description); // <- log to server
         // Actual executing the query. Please keep in mind that this is for learning and education.
         // In real production environment, this has to be secure for SQL injection!
-        connection.query("INSERT INTO `table1` (`task_id`, `user_userID`, `title`, `description`, `created_at`) VALUES (NULL, '" + user_userId +"', '" + title + "', '" + description + "', current_timestamp());", function (error, results, fields) {
+        connection.query("INSERT INTO `table1` (`task_id`, `user_userId`, `title`, `description`, `created_at`) VALUES (NULL, '" + user_userId +"', '" + title + "', '" + description + "', current_timestamp());", function (error, results, fields) {
             if (error) {
                 // we got an errror - inform the client
                 console.error(error); // <- log error in server
@@ -218,6 +218,80 @@ app.post('/database', (req, res) => {
         console.error("Client send no correct data!")
         // Set HTTP Status -> 400 is client error -> and send message
         res.status(400).json({ message: 'This function requries a body with "title" and "description' });
+    }
+});
+
+
+app.get('/todoliste', function(req, res) {
+    // get the userid parameter from the session
+    const userId = req.session.userId;
+    // execute the query with the userid parameter
+    connection.query("SELECT * FROM `todoliste` WHERE user_userId = ?", [userId], function(error, results, fields) {
+        // handle the error, if any
+        if (error) {
+            res.status(500).json(error);
+            return;
+        } else {
+          // we got no error - send it to the client
+          console.log('Success answer from DB: ', results); // <- log results in console
+          // INFO: Here could be some code to modify the result
+          res.status(200).json(results); // <- send it to client
+        }
+    });
+});
+
+// DELETE path for database
+app.delete('/todoliste/:id', (req, res) => {
+    // This path will delete an entry. For example the path would look like DELETE '/database/5' -> This will delete number 5
+    let id = req.params.id; // <- load the ID from the path
+    console.log("Request to delete Item: " + id); // <- log for debugging
+
+    // Actual executing the query to delete it from the server
+    // Please keep in mind to secure this for SQL injection!
+    connection.query("DELETE FROM `todoliste` WHERE `todoliste`.`listeId` = " + id + ";", function (error, results, fields) {
+        if (error) {
+            // we got an errror - inform the client
+            console.error(error); // <- log error in server
+            res.status(500).json(error); // <- send to client
+        } else {
+            // Everything is fine with the query
+            console.log('Success answer: ', results); // <- log results in console
+            // INFO: Here can be some checks of modification of the result
+            res.status(200).json(results); // <- send it to client
+        }
+    });
+});
+
+// POST path for database
+app.post('/todoliste', (req, res) => {
+    // This will add a new row. So we're getting a JSON from the webbrowser which needs to be checked for correctness and later
+    // it will be added to the database with a query.
+    if (typeof req.body !== "undefined" && typeof req.body.liste_title !== "undefined") {
+        // The content looks good, so move on
+        // Get the content to local variables:
+        var user_userId = req.session.userId;
+        var liste_title = req.body.liste_title;
+        console.log("Client send database insert request with 'liste_title': " + liste_title ); // <- log to server
+        // Actual executing the query. Please keep in mind that this is for learning and education.
+        // In real production environment, this has to be secure for SQL injection!
+        connection.query("INSERT INTO `todoliste` (`listeId`, `user_userId`, `liste_title`) VALUES (NULL, '" + user_userId +"', '" + liste_title + "');", function (error, results, fields) {
+            if (error) {
+                // we got an errror - inform the client
+                console.error(error); // <- log error in server
+                res.status(500).json(error); // <- send to client
+            } else {
+                // Everything is fine with the query
+                console.log('Success answer: ', results); // <- log results in console
+                // INFO: Here can be some checks of modification of the result
+                res.status(200).json(results); // <- send it to client
+            }
+        });
+    }
+    else {
+        // There is nobody with a title nor description
+        console.error("Client send no correct data!")
+        // Set HTTP Status -> 400 is client error -> and send message
+        res.status(400).json({ message: 'This function requries a body with "liste_title" ' });
     }
 });
 // ###################### DATABASE PART END ######################
@@ -278,7 +352,7 @@ app.post('/registrierung', (req, res) => {
                 console.log('Success answer: ', results); // <- log results in console
                 // INFO: Here can be some checks of modification of the result
             }
-            res.redirect("/static/erfolgreicheReg.html"); 
+            res.redirect("/static/anmeldung.html"); 
         }); 
     } 
     
@@ -332,7 +406,7 @@ app.post('/anmeldung', (req, res) => {
                 req.session.email = email;
                 req.session.userId = result[0].userId;
 
-                res.redirect("/static/database.html");
+                res.redirect("/static/todoliste.html");
             });
 
 
