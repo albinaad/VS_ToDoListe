@@ -82,13 +82,13 @@
                         // Start the HTML table that should be displayed:
                         var txt = "<table class='table table-hover'>";
                         // add the table hader to it
-                        txt += "<tr><th scope='col'>Listen ID</th><th scope='col'>Title</th><th scope='col'>Aktion</th></tr>"
+                        txt += "<tr><th scope='col'>Listen ID</th><th scope='col'>Title</th><th scope='col'>Aktion</th><th scope='col'></th></tr>"
                         // Go through each row and add it to the table
                         for (var x in row) {
-                            txt += "<tr><td>" + row[x].listeId + "</td><td>" + row[x].liste_title + "</td><td> <button class='btn btn-danger' onclick='deleteRow(" + row[x].listeId + ")'>DELETE</button> </td></tr>";
+                            txt += "<tr><td>" + row[x].listeId + "</td><td>" + row[x].liste_title + "</td><td> <button class='btn btn-secondary'>Öffnen</button> </td><td> <button class='btn btn-danger' onclick='deleteRow(" + row[x].listeId + ")'>Löschen</button> </td></tr>";
                         }
                         // Now add a input row to add a new entry:
-                        txt += "<tr><td></td><td><input id='liste_title' type='text' name='liste_title' class='form-control' placeholder='Titel eingeben.'></td><td> <button class='btn btn-secondary' onclick='addRow()'>ADD</button> </td></tr>"
+                        txt += "<tr><td></td><td><input id='liste_title' type='text' name='liste_title' class='form-control' placeholder='Titel eingeben.'></td><td> <button class='btn btn-secondary' onclick='addRow()'>Hinzufügen</button> </td><td></td></tr>"
                         // end of the table:
                         txt += "</table>"
 
