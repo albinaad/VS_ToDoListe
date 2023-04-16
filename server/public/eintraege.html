@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do Liste</title>
+    <title>Einträge</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -19,24 +19,21 @@
     <link rel="stylesheet" href="css/navbar.css">
 </head>
 <body>
-
-     <!-- Navigationbar -->
-     <nav>
+    
+    <!-- Navigationbar -->
+    <nav>
         <ul id="navStartseite">
-            <li>To-Do App</li>
+            <li><a href="todoliste.html">To-Do App</a></li>
         </ul>
         <form action="/logout" method="GET" id="ausloggenButton">
             <button type="submit" class="btn btn-light">Ausloggen</button>
         </form>
     </nav>
 
-     <!-- The container is for the theme / deisgn -->
-     <main role="main" class="container">
+    <!-- The container is for the theme / deisgn -->
+    <main role="main" class="container">
 
         <br>
-        <h1>Meine To-Do Listen</h1>
-        <br>
-
         <button type="button" onclick="loadDoc()" class="btn btn-outline-dark">Manuelles Laden</button>
         <br><br>
         <div id="target">
@@ -66,29 +63,25 @@
             // The loadDoc()-function will load the table into the defined space
             function loadDoc() {
 
-                // Abfrage der User Id
-                var userId = sessionStorage.getItem('userId');
+                // Laden der Listen ID
+                var listeId = sessionStorage.getItem('listeId');
 
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
-                        // debugger; // <- you can use the debugger for better developing in the browser
-                        // console.log(this.responseText); // this can also help durring debugging in the console of the browser
-                        // console.log(JSON.parse(this.responseText)); // even function output like JSON is visible in the browser console
-                        
+                    if (this.readyState == 4 && this.status == 200) {                        
                         // Parse the JSON answer from the server:
                         var row = JSON.parse(this.responseText);
                         console.log(row);
                         // Start the HTML table that should be displayed:
                         var txt = "<table class='table table-hover'>";
                         // add the table hader to it
-                        txt += "<tr><th scope='col'>Listen ID</th><th scope='col'>Title</th><th scope='col'>Aktion</th><th scope='col'></th></tr>"
+                        txt += "<tr><th scope='col'>ID</th><th scope='col'>To Do</th><th scope='col'>Beschreibung</th><th scope='col'>Erstellt am</th><th scope='col'>Aktion</th></tr>"
                         // Go through each row and add it to the table
                         for (var x in row) {
-                            txt += "<tr><td>" + row[x].listeId + "</td><td>" + row[x].liste_title + "</td><td> <button class='btn btn-secondary' onclick='openList(" + row[x].listeId + ")'>Öffnen</button> </td><td> <button class='btn btn-danger' onclick='deleteRow(" + row[x].listeId + ")'>Löschen</button> </td></tr>";
+                            txt += "<tr><td>" + row[x].eintraegeId + "</td><td>" + row[x].eintraege_title + "</td><td>" + row[x].eintraege_description + "</td><td>" + row[x].created_at + "</td><td> <button class='btn btn-danger' onclick='deleteRow(" + row[x].eintraegeId + ")'>DELETE</button> </td></tr>";
                         }
                         // Now add a input row to add a new entry:
-                        txt += "<tr><td></td><td><input id='liste_title' type='text' name='liste_title' class='form-control' placeholder='Titel eingeben.'></td><td> <button class='btn btn-secondary' onclick='addRow()'>Hinzufügen</button> </td><td></td></tr>"
+                        txt += "<tr><td></td><td><input id='eintraege_title' type='text' name='eintraege_title' class='form-control' placeholder='To Do eingeben'></td><td><input id='eintraege_description' type='text' name='eintraege_description' class='form-control' placeholder='Beschreibung eingeben'></td><td></td><td> <button class='btn btn-secondary' onclick='addRow()'>Hinzufügen</button> </td></tr>"
                         // end of the table:
                         txt += "</table>"
 
@@ -97,13 +90,8 @@
                 };
 
                 // the "../" is required because we're in "static" folder!
-                xhttp.open("GET", "../todoliste" , true);
+                xhttp.open("GET", "../eintraege/" + listeId, true);
                 xhttp.send();
-            }
-
-            function openList(listeId) {
-                sessionStorage.setItem('listeId', listeId);
-                window.location.href = "eintraege.html";
             }
 
             // The deleteRow(id)-function will delete a row based on the given id. The "Delete"-Button will use this and give the ID to it.
@@ -120,13 +108,13 @@
                         var error = JSON.parse(this.responseText);
                         console.log("ERROR: ", error);
                         // Show error alert:
-                        showErrorAlert('Eintrag konnte nicht gelöscht werden!');
+                        showErrorAlert('Fehler beim löschen!');
                     }
                     // reload table
                     loadDoc();
                 };
                 // the "../" is required because we're in "static" folder!
-                xhttp.open("DELETE", "../todoliste/" + id, true);
+                xhttp.open("DELETE", "../eintraege/" + id, true);
                 xhttp.send();
             }
 
@@ -134,16 +122,18 @@
             function addRow() {
                 // construct an HTTP request
                 var xhr = new XMLHttpRequest();
-                // define the type POST to the url "../database" - we are in 'static/database'
-                xhr.open("POST", "../todoliste", true);
+                // define the type POST to the url "../einträge" - we are in 'static/einträge'
+                xhr.open("POST", "../eintraege", true);
                 // define that the content will be JSON (serialization)
                 xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
                 // prepare the structure of the message
                 var data_to_send = {
-                    liste_title: "",
+                    eintraege_title: "",
+                    eintraege_description: ""
                 }
                 // Load the title and description from the inputfields on this page:
-                data_to_send.liste_title = document.getElementById("liste_title").value;
+                data_to_send.eintraege_title = document.getElementById("eintraege_title").value;
+                data_to_send.eintraege_description = document.getElementById("eintraege_description").value;
                 // send the collected data as JSON
                 xhr.send(JSON.stringify(data_to_send));
 
@@ -153,13 +143,13 @@
                         // Parse the JSON answer from the server:
                         var answer = JSON.parse(this.responseText);
                         // Show success message:
-                        showSuccessAlert('Eintrag erfolgreich hinzugefügt!');
+                        showSuccessAlert('Erfolgreich hinzugefügt!');
                     } else if (this.readyState == 4 && this.status == 500) {
                         // We got an error:
                         var error = JSON.parse(this.responseText);
                         console.log("ERROR: ", error);
                         // Show error alert:
-                        showErrorAlert('Fehler beim hinzugügen!');
+                        showErrorAlert('Fehler beim Hinzufügen!');
                     }
                     // reload table
                     loadDoc();
@@ -172,6 +162,6 @@
         </script>
 
     </main><!-- /.container -->
-    
+
 </body>
 </html>

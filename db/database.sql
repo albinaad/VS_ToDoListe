@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: meinecooledb
--- Erstellungszeit: 13. Apr 2023 um 20:28
+-- Erstellungszeit: 16. Apr 2023 um 14:15
 -- Server-Version: 10.11.2-MariaDB-1:10.11.2+maria~ubu2204
 -- PHP-Version: 8.0.19
 
@@ -20,6 +20,27 @@ SET time_zone = "+00:00";
 --
 -- Datenbank: `exampledb`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `eintraege`
+--
+
+CREATE TABLE `eintraege` (
+  `eintraegeId` int(11) NOT NULL,
+  `todoliste_listeId` int(11) NOT NULL,
+  `eintraege_title` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `eintraege_description` text CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Daten für Tabelle `eintraege`
+--
+
+INSERT INTO `eintraege` (`eintraegeId`, `todoliste_listeId`, `eintraege_title`, `eintraege_description`, `created_at`) VALUES
+(1, 1, 'Buch lesen', 'Seite 200', '2023-04-16 12:31:11');
 
 -- --------------------------------------------------------
 
@@ -66,6 +87,13 @@ CREATE TABLE `todoliste` (
   `liste_title` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Daten für Tabelle `todoliste`
+--
+
+INSERT INTO `todoliste` (`listeId`, `user_userId`, `liste_title`) VALUES
+(1, 1, 'To Do Liste 1');
+
 -- --------------------------------------------------------
 
 --
@@ -89,6 +117,13 @@ INSERT INTO `user` (`userId`, `benutzername`, `email`, `password`) VALUES
 --
 -- Indizes der exportierten Tabellen
 --
+
+--
+-- Indizes für die Tabelle `eintraege`
+--
+ALTER TABLE `eintraege`
+  ADD PRIMARY KEY (`eintraegeId`),
+  ADD KEY `todoliste_listeId` (`todoliste_listeId`);
 
 --
 -- Indizes für die Tabelle `sessions`
@@ -122,6 +157,12 @@ ALTER TABLE `user`
 --
 
 --
+-- AUTO_INCREMENT für Tabelle `eintraege`
+--
+ALTER TABLE `eintraege`
+  MODIFY `eintraegeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT für Tabelle `table1`
 --
 ALTER TABLE `table1`
@@ -131,7 +172,7 @@ ALTER TABLE `table1`
 -- AUTO_INCREMENT für Tabelle `todoliste`
 --
 ALTER TABLE `todoliste`
-  MODIFY `listeId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `listeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT für Tabelle `user`
@@ -142,6 +183,12 @@ ALTER TABLE `user`
 --
 -- Constraints der exportierten Tabellen
 --
+
+--
+-- Constraints der Tabelle `eintraege`
+--
+ALTER TABLE `eintraege`
+  ADD CONSTRAINT `eintraege_ibfk_1` FOREIGN KEY (`todoliste_listeId`) REFERENCES `todoliste` (`listeId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints der Tabelle `table1`

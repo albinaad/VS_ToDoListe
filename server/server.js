@@ -240,7 +240,7 @@ app.get('/todoliste', function(req, res) {
     });
 });
 
-// DELETE path for database
+// DELETE path for todoliste
 app.delete('/todoliste/:id', (req, res) => {
     // This path will delete an entry. For example the path would look like DELETE '/database/5' -> This will delete number 5
     let id = req.params.id; // <- load the ID from the path
@@ -262,7 +262,7 @@ app.delete('/todoliste/:id', (req, res) => {
     });
 });
 
-// POST path for database
+// POST path for todoliste
 app.post('/todoliste', (req, res) => {
     // This will add a new row. So we're getting a JSON from the webbrowser which needs to be checked for correctness and later
     // it will be added to the database with a query.
@@ -292,6 +292,87 @@ app.post('/todoliste', (req, res) => {
         console.error("Client send no correct data!")
         // Set HTTP Status -> 400 is client error -> and send message
         res.status(400).json({ message: 'This function requries a body with "liste_title" ' });
+    }
+});
+
+app.get('/eintraege/:listeId', function(req, res) {
+    // get the userid parameter from the session
+    const userId = req.session.userId;
+    // get the listeId parameter from session
+    const listeId = req.params.listeId;
+    // Check if listeId is defined
+    if (typeof listeId === 'undefined') {
+        res.status(400).json({ message: 'listeId is not defined.' });
+        return;
+    }
+    // execute the query with the listeId parameter
+    connection.query("SELECT * FROM `eintraege` WHERE todoliste_listeId = ?", [listeId], function(error, results, fields) {
+        // handle the error, if any
+        if (error) {
+            res.status(500).json(error);
+            return;
+        } else {
+          // we got no error - send it to the client
+          console.log('Success answer from DB: ', results); // <- log results in console
+          // INFO: Here could be some code to modify the result
+          res.status(200).json(results); // <- send it to client
+        }
+    });
+});
+
+// DELETE path for einträge
+app.delete('/eintraege/:id', (req, res) => {
+    // This path will delete an entry. For example the path would look like DELETE '/database/5' -> This will delete number 5
+    let id = req.params.id; // <- load the ID from the path
+    console.log("Request to delete Item: " + id); // <- log for debugging
+
+    // Actual executing the query to delete it from the server
+    // Please keep in mind to secure this for SQL injection!
+    connection.query("DELETE FROM `eintraege` WHERE `eintraege`.`eintraegeId` = " + id + ";", function (error, results, fields) {
+        if (error) {
+            // we got an errror - inform the client
+            console.error(error); // <- log error in server
+            res.status(500).json(error); // <- send to client
+        } else {
+            // Everything is fine with the query
+            console.log('Success answer: ', results); // <- log results in console
+            // INFO: Here can be some checks of modification of the result
+            res.status(200).json(results); // <- send it to client
+        }
+    });
+});
+
+// POST path for einträge
+app.post('/eintraege', (req, res) => {
+    // This will add a new row. So we're getting a JSON from the webbrowser which needs to be checked for correctness and later
+    // it will be added to the database with a query.
+    if (typeof req.body !== "undefined" && typeof req.body.eintraege_title !== "undefined" && typeof req.body.eintraege_description !== "undefined") {
+        // The content looks good, so move on
+        // Get the content to local variables:
+        var todoliste_listeId = req.session.listeId;
+        var eintraege_title = req.body.eintraege_title;
+        var eintraege_description = req.body.eintraege_description;
+        console.log("Client send database insert request with 'eintraege_title': " + eintraege_title + " ; eintraege_description: " + eintraege_description); // <- log to server
+        // Actual executing the query. Please keep in mind that this is for learning and education.
+        // In real production environment, this has to be secure for SQL injection!
+        connection.query("INSERT INTO `eintraege` (`eintraegeId`, `todoliste_listeId`, `eintraege_title`, `eintraege_description`, `created_at`) VALUES (NULL, '" + todoliste_listeId +"', '" + eintraege_title + "', '" + eintraege_description + "', current_timestamp());", function (error, results, fields) {
+            if (error) {
+                // we got an errror - inform the client
+                console.error(error); // <- log error in server
+                res.status(500).json(error); // <- send to client
+            } else {
+                // Everything is fine with the query
+                console.log('Success answer: ', results); // <- log results in console
+                // INFO: Here can be some checks of modification of the result
+                res.status(200).json(results); // <- send it to client
+            }
+        });
+    }
+    else {
+        // There is nobody with a title nor description
+        console.error("Client send no correct data!")
+        // Set HTTP Status -> 400 is client error -> and send message
+        res.status(400).json({ message: 'This function requries a body with "title" and "description' });
     }
 });
 // ###################### DATABASE PART END ######################
@@ -423,6 +504,22 @@ app.post('/anmeldung', (req, res) => {
 
 // Überprüfen ob User eingeloggt (Database)
 app.get('/database', (req, res) => {
+    if (!req.session.loggedin) {
+      res.redirect('/anmeldung.html');
+      return;
+    }
+});
+
+// Überprüfen ob User eingeloggt (Todoliste)
+app.get('/todoliste', (req, res) => {
+    if (!req.session.loggedin) {
+      res.redirect('/anmeldung.html');
+      return;
+    }
+});
+
+// Überprüfen ob User eingeloggt (Einträge)
+app.get('/einträge', (req, res) => {
     if (!req.session.loggedin) {
       res.redirect('/anmeldung.html');
       return;
