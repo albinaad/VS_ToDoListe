@@ -343,13 +343,13 @@ app.delete('/eintraege/:id', (req, res) => {
 });
 
 // POST path for einträge
-app.post('/eintraege', (req, res) => {
+app.post('/eintraege/:listeId', (req, res) => {
     // This will add a new row. So we're getting a JSON from the webbrowser which needs to be checked for correctness and later
     // it will be added to the database with a query.
     if (typeof req.body !== "undefined" && typeof req.body.eintraege_title !== "undefined" && typeof req.body.eintraege_description !== "undefined") {
         // The content looks good, so move on
         // Get the content to local variables:
-        var todoliste_listeId = req.session.listeId;
+        var todoliste_listeId = req.params.listeId;
         var eintraege_title = req.body.eintraege_title;
         var eintraege_description = req.body.eintraege_description;
         console.log("Client send database insert request with 'eintraege_title': " + eintraege_title + " ; eintraege_description: " + eintraege_description); // <- log to server

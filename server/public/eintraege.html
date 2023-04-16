@@ -120,10 +120,14 @@
 
             // The addRow()-function will add a row to the table. It will use the "title" and "description" input field. All other fields will be added by the database (see server.js)
             function addRow() {
+
+                // Laden der Listen ID
+                var listeId = sessionStorage.getItem('listeId');
+
                 // construct an HTTP request
                 var xhr = new XMLHttpRequest();
                 // define the type POST to the url "../einträge" - we are in 'static/einträge'
-                xhr.open("POST", "../eintraege", true);
+                xhr.open("POST", "../eintraege/" + listeId, true);
                 // define that the content will be JSON (serialization)
                 xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
                 // prepare the structure of the message
