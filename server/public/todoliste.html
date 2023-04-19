@@ -17,6 +17,8 @@
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/todoliste.css">
+
 </head>
 <body>
 
@@ -38,6 +40,25 @@
         <br>
 
         <button type="button" onclick="loadDoc()" class="btn btn-outline-dark">Manuelles Laden</button>
+        <br>
+        <br>
+        <br>
+        <div id="inviteDiv">
+            <button id="inviteButton" class="btn btn-secondary">Benutzer einladen</button>
+            <br>
+            <form id="inviteForm" style="display:none;">
+                <div class="form-group">
+                    <label id="listLabel" for="listSelect">To-Do-Liste auswählen:</label>
+                    <select class="form-control" id="listSelect" name="listSelect"></select>
+                  </div>
+                  <div class="form-group">
+                    <label id="emailLabel" for="userEmail">Benutzer-E-Mail-Adresse:</label>
+                    <input type="email" class="form-control" id="userEmail" name="userEmail" required>
+                  </div>
+                  <button type="submit" class="btn btn-secondary">Einladen</button>
+                  <button type="button" id="formSchliessen" class="btn btn-secondary">Schließen</button>
+            </form>
+        </div>
         <br><br>
         <div id="target">
             <!-- Here will be the database displayed -->
@@ -115,6 +136,7 @@
                         var answer = JSON.parse(this.responseText);
                         // Show success message:
                         showSuccessAlert('Erfolgreich gelöscht!');
+                        updateListDropdown();
                     } else if (this.readyState == 4 && this.status == 500) {
                         // We got an error:
                         var error = JSON.parse(this.responseText);
@@ -154,6 +176,7 @@
                         var answer = JSON.parse(this.responseText);
                         // Show success message:
                         showSuccessAlert('Eintrag erfolgreich hinzugefügt!');
+                        updateListDropdown();
                     } else if (this.readyState == 4 && this.status == 500) {
                         // We got an error:
                         var error = JSON.parse(this.responseText);
@@ -166,6 +189,71 @@
                 };
 
             }
+             
+            // Button um das Formular zum Einladen anzeigen zu lasses und wieder verstecken
+            var inviteButton = document.getElementById("inviteButton");
+            var inviteForm = document.getElementById("inviteForm");
+            var formSchliessen = document.getElementById("formSchliessen");
+
+            inviteButton.addEventListener("click", function() {
+               inviteForm.style.display = "block";
+            });
+
+            formSchliessen.addEventListener("click", function() {
+                inviteForm.style.display = "none";
+            });
+
+            // Dropdown-Liste mit den To-Do-Listen füllen
+            function fillListSelect() {
+            // Abfrage der User Id
+            var userId = sessionStorage.getItem('userId');
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+              if (this.readyState == 4 && this.status == 200) {
+              // Parse the JSON answer from the server:
+              var row = JSON.parse(this.responseText);
+              // Fülle die Dropdown-Liste mit den Listen
+              var listSelect = document.getElementById("listSelect");
+              row.forEach(function (list) {
+                var option = document.createElement("option");
+                option.value = list.listeId;
+                option.text = list.liste_title;
+                listSelect.appendChild(option);
+              });
+             }
+            };
+           // the "../" is required because we're in "static" folder!
+           xhttp.open("GET", "../todoliste", true);
+           xhttp.send();
+          }
+
+          function updateListDropdown() {
+          var select = document.getElementById("listSelect");
+          select.innerHTML = "";
+
+          // fetch the latest list data from the server
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function () {
+           if (this.readyState == 4 && this.status == 200) {
+            // Parse the JSON answer from the server:
+            var lists = JSON.parse(this.responseText);
+            // add each list as an option to the select element
+            for (var i = 0; i < lists.length; i++) {
+                var option = document.createElement("option");
+                option.value = lists[i].listeId;
+                option.text = lists[i].liste_title;
+                select.add(option);
+            }
+           }
+          };  
+          xhttp.open("GET", "../todoliste", true);
+          xhttp.send();
+         }
+
+
+            // Füllen Sie die Dropdown-Liste, wenn die Seite geladen wird
+            fillListSelect();
 
             // load the table at the start
             loadDoc();
