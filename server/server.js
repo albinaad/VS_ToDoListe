@@ -223,10 +223,10 @@ app.post('/database', (req, res) => {
 
 
 app.get('/todoliste', function(req, res) {
-    // get the userid parameter from the session
+    // get the userId parameter from the session
     const userId = req.session.userId;
-    // execute the query with the userid parameter
-    connection.query("SELECT * FROM `todoliste` WHERE user_userId = ?", [userId], function(error, results, fields) {
+    // execute the query with the userId parameter
+    connection.query("SELECT listeId FROM `user_liste` WHERE userId = ?", [userId], function(error, results, fields) {
         // handle the error, if any
         if (error) {
             res.status(500).json(error);
@@ -234,8 +234,24 @@ app.get('/todoliste', function(req, res) {
         } else {
           // we got no error - send it to the client
           console.log('Success answer from DB: ', results); // <- log results in console
-          // INFO: Here could be some code to modify the result
-          res.status(200).json(results); // <- send it to client
+          const listeIds = results.map(result => result.listeId);
+          if (listeIds.length === 0) {
+            // If there are no entries in the user_liste table, return an empty array
+            res.status(200).json([]);
+            return;
+        }
+          // query todoliste table using listeIds
+          connection.query("SELECT * FROM `todoliste` WHERE listeId IN (?)", [listeIds], function(error, results, fields) {
+            if (error) {
+              res.status(500).json(error);
+              return;
+            } else {
+              // send the results to the client
+              console.log('Success answer from DB: ', results); // <- log results in console
+              // INFO: Here could be some code to modify the result
+              res.status(200).json(results); // <- send it to client
+            }
+          });
         }
     });
 });
@@ -256,46 +272,69 @@ app.delete('/todoliste/:id', (req, res) => {
         } else {
             // Everything is fine with the query
             console.log('Success answer: ', results); // <- log results in console
-            // INFO: Here can be some checks of modification of the result
-            res.status(200).json(results); // <- send it to client
+            
+            // Actual executing the query to delete it from the user_liste table
+            connection.query("DELETE FROM `user_liste` WHERE `user_liste`.`listeId` = " + id + ";", function (error, results, fields) {
+                if (error) {
+                    // we got an errror - inform the client
+                    console.error(error); // <- log error in server
+                    res.status(500).json(error); // <- send to client
+                } else {
+                    // Everything is fine with the query
+                    console.log('Success answer: ', results); // <- log results in console
+                    // INFO: Here can be some checks of modification of the result
+                    res.status(200).json(results); // <- send it to client
+                }
+            });
         }
     });
 });
 
 // POST path for todoliste
 app.post('/todoliste', (req, res) => {
-    // This will add a new row. So we're getting a JSON from the webbrowser which needs to be checked for correctness and later
-    // it will be added to the database with a query.
     if (typeof req.body !== "undefined" && typeof req.body.liste_title !== "undefined") {
-        // The content looks good, so move on
-        // Get the content to local variables:
-        var user_userId = req.session.userId;
-        var liste_title = req.body.liste_title;
-        console.log("Client send database insert request with 'liste_title': " + liste_title ); // <- log to server
-        // Actual executing the query. Please keep in mind that this is for learning and education.
-        // In real production environment, this has to be secure for SQL injection!
-        connection.query("INSERT INTO `todoliste` (`listeId`, `user_userId`, `liste_title`) VALUES (NULL, '" + user_userId +"', '" + liste_title + "');", function (error, results, fields) {
-            if (error) {
-                // we got an errror - inform the client
-                console.error(error); // <- log error in server
-                res.status(500).json(error); // <- send to client
-            } else {
-                // Everything is fine with the query
-                console.log('Success answer: ', results); // <- log results in console
-                // INFO: Here can be some checks of modification of the result
-                res.status(200).json(results); // <- send it to client
-            }
-        });
+      // Get the content to local variables:
+      const userId = req.session.userId;
+      const liste_title = req.body.liste_title;
+      console.log("Client sent database insert request with 'liste_title': " + liste_title); // <- log to server
+      // Actual executing the query. Please keep in mind that this is for learning and education.
+      // In real production environment, this has to be secure for SQL injection!
+      connection.query("INSERT INTO `todoliste` (`listeId`,  `liste_title`) VALUES (NULL, ?)", [liste_title], function (error, results, fields) {
+          if (error) {
+            // we got an errror - inform the client
+            console.error(error); // <- log error in server
+            res.status(500).json(error); // <- send to client
+          } else {
+            // Everything is fine with the query
+            console.log('Success answer: ', results); // <- log results in console
+            const listeId = results.insertId;
+            // Insert a new row into the user_liste table to associate the listeId with the userId in the session
+            connection.query("INSERT INTO `user_liste` (`listeId`, `userId`) VALUES (?, ?)", [listeId, userId], function (error, results, fields) {
+                if (error) {
+                  // we got an errror - inform the client
+                  console.error(error); // <- log error in server
+                  res.status(500).json(error); // <- send to client
+                } else {
+                  // Everything is fine with the query
+                  console.log('Success answer: ', results); // <- log results in console
+                  // INFO: Here can be some checks of modification of the result
+                  res.status(200).json(results); // <- send it to client
+                }
+              }
+            );
+          }
+        }
+      );
+    } else {
+      // There is nobody with a title 
+      console.error("Client sent no correct data!")
+      // Set HTTP Status -> 400 is client error -> and send message
+      res.status(400).json({ message: 'This function requires a body with "liste_title" ' });
     }
-    else {
-        // There is nobody with a title nor description
-        console.error("Client send no correct data!")
-        // Set HTTP Status -> 400 is client error -> and send message
-        res.status(400).json({ message: 'This function requries a body with "liste_title" ' });
-    }
-});
+  });
 
 
+  
 
 app.get('/eintraege/:listeId', function(req, res) {
     // get the userid parameter from the session

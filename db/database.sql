@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: meinecooledb
--- Erstellungszeit: 16. Apr 2023 um 14:15
+-- Erstellungszeit: 20. Apr 2023 um 10:08
 -- Server-Version: 10.11.2-MariaDB-1:10.11.2+maria~ubu2204
 -- PHP-Version: 8.0.19
 
@@ -83,16 +83,15 @@ INSERT INTO `table1` (`task_id`, `user_userId`, `title`, `description`, `created
 
 CREATE TABLE `todoliste` (
   `listeId` int(11) NOT NULL,
-  `user_userId` int(11) NOT NULL,
-  `liste_title` varchar(255) NOT NULL
+  `liste_title` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Daten für Tabelle `todoliste`
 --
 
-INSERT INTO `todoliste` (`listeId`, `user_userId`, `liste_title`) VALUES
-(1, 1, 'To Do Liste 1');
+INSERT INTO `todoliste` (`listeId`, `liste_title`) VALUES
+(1, 'Liste 1');
 
 -- --------------------------------------------------------
 
@@ -113,6 +112,24 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`userId`, `benutzername`, `email`, `password`) VALUES
 (1, 'Albina', 'albina@test.de', '$2a$10$kd28.QRz4a34Bs9oeIGZ0.krGVCsCw5XcnWZswARt1HvDrzTTyYkm');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `user_liste`
+--
+
+CREATE TABLE `user_liste` (
+  `userId` int(11) NOT NULL,
+  `listeId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Daten für Tabelle `user_liste`
+--
+
+INSERT INTO `user_liste` (`userId`, `listeId`) VALUES
+(1, 1);
 
 --
 -- Indizes der exportierten Tabellen
@@ -142,8 +159,7 @@ ALTER TABLE `table1`
 -- Indizes für die Tabelle `todoliste`
 --
 ALTER TABLE `todoliste`
-  ADD PRIMARY KEY (`listeId`),
-  ADD KEY `user_userId` (`user_userId`);
+  ADD PRIMARY KEY (`listeId`);
 
 --
 -- Indizes für die Tabelle `user`
@@ -151,6 +167,13 @@ ALTER TABLE `todoliste`
 ALTER TABLE `user`
   ADD PRIMARY KEY (`userId`),
   ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Indizes für die Tabelle `user_liste`
+--
+ALTER TABLE `user_liste`
+  ADD KEY `userId` (`userId`),
+  ADD KEY `listeId` (`listeId`);
 
 --
 -- AUTO_INCREMENT für exportierte Tabellen
@@ -172,13 +195,13 @@ ALTER TABLE `table1`
 -- AUTO_INCREMENT für Tabelle `todoliste`
 --
 ALTER TABLE `todoliste`
-  MODIFY `listeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `listeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT für Tabelle `user`
 --
 ALTER TABLE `user`
-  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints der exportierten Tabellen
@@ -197,10 +220,11 @@ ALTER TABLE `table1`
   ADD CONSTRAINT `table1_ibfk_1` FOREIGN KEY (`user_userId`) REFERENCES `user` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints der Tabelle `todoliste`
+-- Constraints der Tabelle `user_liste`
 --
-ALTER TABLE `todoliste`
-  ADD CONSTRAINT `todoliste_ibfk_1` FOREIGN KEY (`user_userId`) REFERENCES `user` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `user_liste`
+  ADD CONSTRAINT `user_liste_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `user_liste_ibfk_2` FOREIGN KEY (`listeId`) REFERENCES `todoliste` (`listeId`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
