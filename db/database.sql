@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: meinecooledb
--- Erstellungszeit: 20. Apr 2023 um 10:08
+-- Erstellungszeit: 20. Apr 2023 um 13:48
 -- Server-Version: 10.11.2-MariaDB-1:10.11.2+maria~ubu2204
 -- PHP-Version: 8.0.19
 
@@ -40,7 +40,7 @@ CREATE TABLE `eintraege` (
 --
 
 INSERT INTO `eintraege` (`eintraegeId`, `todoliste_listeId`, `eintraege_title`, `eintraege_description`, `created_at`) VALUES
-(1, 1, 'Buch lesen', 'Seite 200', '2023-04-16 12:31:11');
+(1, 1, 'Buch lesen', 'Seite 200', '2023-04-20 13:48:10');
 
 -- --------------------------------------------------------
 
@@ -53,27 +53,6 @@ CREATE TABLE `sessions` (
   `expires` int(11) UNSIGNED NOT NULL,
   `data` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `table1`
---
-
-CREATE TABLE `table1` (
-  `task_id` int(11) NOT NULL,
-  `user_userId` int(11) NOT NULL,
-  `title` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
-  `description` text CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Daten für Tabelle `table1`
---
-
-INSERT INTO `table1` (`task_id`, `user_userId`, `title`, `description`, `created_at`) VALUES
-(1, 1, 'Buch lesen', 'Seite 200', '2023-04-02 23:36:22');
 
 -- --------------------------------------------------------
 
@@ -111,7 +90,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`userId`, `benutzername`, `email`, `password`) VALUES
-(1, 'Albina', 'albina@test.de', '$2a$10$kd28.QRz4a34Bs9oeIGZ0.krGVCsCw5XcnWZswARt1HvDrzTTyYkm');
+(1, 'Albina', 'albina@test.de', '$2a$10$rLDP0FUrYNDe35YACj8UxuQrbXzb2c.mMSHZFncyEndeHci9dag9S');
 
 -- --------------------------------------------------------
 
@@ -149,13 +128,6 @@ ALTER TABLE `sessions`
   ADD PRIMARY KEY (`session_id`);
 
 --
--- Indizes für die Tabelle `table1`
---
-ALTER TABLE `table1`
-  ADD PRIMARY KEY (`task_id`),
-  ADD KEY `user_userId` (`user_userId`);
-
---
 -- Indizes für die Tabelle `todoliste`
 --
 ALTER TABLE `todoliste`
@@ -183,25 +155,19 @@ ALTER TABLE `user_liste`
 -- AUTO_INCREMENT für Tabelle `eintraege`
 --
 ALTER TABLE `eintraege`
-  MODIFY `eintraegeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT für Tabelle `table1`
---
-ALTER TABLE `table1`
-  MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `eintraegeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT für Tabelle `todoliste`
 --
 ALTER TABLE `todoliste`
-  MODIFY `listeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `listeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT für Tabelle `user`
 --
 ALTER TABLE `user`
-  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints der exportierten Tabellen
@@ -212,12 +178,6 @@ ALTER TABLE `user`
 --
 ALTER TABLE `eintraege`
   ADD CONSTRAINT `eintraege_ibfk_1` FOREIGN KEY (`todoliste_listeId`) REFERENCES `todoliste` (`listeId`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints der Tabelle `table1`
---
-ALTER TABLE `table1`
-  ADD CONSTRAINT `table1_ibfk_1` FOREIGN KEY (`user_userId`) REFERENCES `user` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints der Tabelle `user_liste`
