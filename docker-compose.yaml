@@ -1,9 +1,17 @@
 version: '3.3'
 services:
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d
+    depends_on:
+      - server
+    ports:
+      - 8080:8080
   server:
     build: server
-    ports:
-      - "8080:8080"
+    #ports:
+    # - "8080:8080"
     restart: always
     environment:
       MYSQL_DATABASE: exampledb
@@ -14,6 +22,7 @@ services:
       - meinecooledb
     depends_on:
       - meinecooledb
+    scale: 3
   meinecooledb:
     # Use of a modified datbase in 'db'-folder.
     # See README.md for more information.
