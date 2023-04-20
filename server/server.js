@@ -333,7 +333,42 @@ app.post('/todoliste', (req, res) => {
     }
   });
 
+// POST path for inviteForm - user can be added to todolists
+app.post('/invite', function(req, res) {
 
+    var email = req.body.userEmail;
+    var listeId = req.body.listSelect;
+
+     // Abfrage der Email um userId zu erlangen
+     connection.query("SELECT userId FROM `user` WHERE email = ?", [email], function(error, results, fields) {
+     //handle error, if any
+        if (error) {
+          res.status(500).json(error);
+          return;
+                } else if (results.length === 0) {
+                    // if no user found with the given email
+                    res.status(404).json({ message: 'User not found' });
+                    return;
+                } else {
+                    var userId = results[0].userId;
+
+                    // Save userId and listeId in user_liste, user is now added and should see the list
+                    connection.query("INSERT INTO `user_liste` (userId, listeId) VALUES (?, ?)", [userId, listeId], function(error, results, fields) {
+                        //handle error, if any
+                        if (error) {
+                            res.status(500).json(error);
+                            return;
+                        } else {
+                            // Everything is fine with the query
+                            console.log('Success answer: ', results); // <- log results in console
+                            // INFO: Here can be some checks of modification of the result
+                            res.status(200).json(results); // <- send it to client
+                        }
+                    });
+                }
+            });
+        }
+);
   
 
 app.get('/eintraege/:listeId', function(req, res) {

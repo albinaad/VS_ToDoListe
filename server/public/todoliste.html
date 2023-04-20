@@ -46,17 +46,17 @@
         <div id="inviteDiv">
             <button id="inviteButton" class="btn btn-secondary">Benutzer einladen</button>
             <br>
-            <form action="/inviteForm" method="POST" id="inviteForm" style="display:none;">
+            <form id="inviteForm" style="display: none;">
                 <div class="form-group">
                     <label id="listLabel" for="listSelect">To-Do-Liste auswählen:</label>
                     <select class="form-control" id="listSelect" name="listSelect"></select>
-                  </div>
-                  <div class="form-group">
+                </div>
+                <div class="form-group">
                     <label id="emailLabel" for="userEmail">Benutzer-E-Mail-Adresse:</label>
                     <input type="email" class="form-control" id="userEmail" name="userEmail" required>
-                  </div>
-                  <button type="submit" id="einladenButton" class="btn btn-secondary">Einladen</button>
-                  <button type="button" id="formSchliessen" class="btn btn-secondary">Schließen</button>
+                </div>
+                <button type="button" onclick="inviteUser()" id="einladenButton" class="btn btn-secondary">Einladen</button>
+                <button type="button" id="formSchliessen" class="btn btn-secondary">Schließen</button>
             </form>
         </div>
         <br><br>
@@ -250,6 +250,43 @@
           xhttp.open("GET", "../todoliste", true);
           xhttp.send();
          }
+
+         function inviteUser() {
+                // construct an HTTP request
+                var xhr = new XMLHttpRequest();
+                // define the type POST to the url "../database" - we are in 'static/database'
+                xhr.open("POST", "../invite", true);
+                // define that the content will be JSON (serialization)
+                xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+                // prepare the structure of the message
+                var data_to_send = {
+                    userEmail: "",
+                    listSelect: "",
+                }
+                // Load the title and description from the inputfields on this page:
+                data_to_send.userEmail = document.getElementById("userEmail").value;
+                data_to_send.listSelect = document.getElementById("listSelect").value;
+                // send the collected data as JSON
+                xhr.send(JSON.stringify(data_to_send));
+
+                // Handle the answer from the server:
+                xhr.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        // Parse the JSON answer from the server:
+                        var answer = JSON.parse(this.responseText);
+                        // Show success message:
+                        showSuccessAlert('Nutzer hinzugefügt!');
+                        document.getElementById("inviteForm").style.display = "none";
+                    } else if (this.readyState == 4 && this.status == 500) {
+                        // We got an error:
+                        var error = JSON.parse(this.responseText);
+                        console.log("ERROR: ", error);
+                        // Show error alert:
+                        showErrorAlert('Fehler beim hinzufügen!');
+                    }
+                };
+
+            }
 
 
             // Füllen Sie die Dropdown-Liste, wenn die Seite geladen wird
