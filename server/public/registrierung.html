@@ -1,3 +1,5 @@
+<!-- Seite auf welcher sich der User registrieren kann. -->
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -17,11 +19,14 @@
     <!-- Navigationbar -->
     <nav>
         <ul id="navStartseite">
+            <!-- Link der zurück zur Startseite führt. -->
             <li><a href="index.html">To-Do App</a></li>
         </ul>
         <ul id="navLogin">
+            <!-- Verschieden Links die zur Startseite, Anmeldung oder Registrierung führen. -->
             <li><a  href="index.html">Startseite</a></li>
             <li><a href="anmeldung.html">Anmelden</a></li>
+            <!-- Hier wird die Klasse active verwendet um den User durch eine Farbe anzuzeigen auf welcher Seite er sich befindet. -->
             <li><a class="active" href="registrierung.html">Registrieren</a></li>
         </ul>
     </nav>
@@ -37,21 +42,26 @@
         <p>Bitte füllen Sie das Formular aus um sich zu registieren.</p>
         <hr>
        
+        <!-- Formular das die Daten an den /registrierung Pfad sendet. -->
         <form action="/registrierung" method="post">
-
+              
+            <!-- Eingabefeld für den Benutzernamen -->
             <label for="benutzername">Benutzername</label>
             <input type="text" id="benutzername" name="benutzername" placeholder="Benutzername eingeben">
 
-
+            <!-- Eingabefeld für die E-Mail --> 
             <label for="email">E-Mail</label>
             <input type="text" id="email" name="email" placeholder="E-Mail eingeben">
 
+            <!-- Eingabefeld für das Passwort -->
             <label for="password">Passwort</label>
             <input type="password" id="password" name="password" placeholder="Passwort eingeben">
-
+            
+            <!-- Passwort muss erneut eingeben werden, um Tippfehler zu vermeiden. -->
             <label for="passwordWiederholen">Passwort wiederholen</label>
             <input type="password" id="passwordWiederholen" name="passwordWiederholen" placeholder="Passwort erneut eingeben">
-
+            
+            <!-- Button um die Daten der Eingabefelder zu übermitteln -->
             <div class="submitButton">
                 <button type="submit">Registrieren</button>
             </div>
@@ -66,23 +76,25 @@
 
     <!-- Ab hier JavaScript  -->
     <script>
-
+        
+        // Funktion die die Fehlermeldung schreibt. 
        function showErrorAlert(message) {
            document.getElementById("fehlermeldung").innerHTML = '<div class="alert alert-danger" role="alert">' + message + '</div>';
         }
 
+        // Erstelle neue Http-Anfrage
         var xhr = new XMLHttpRequest();
-        // define the type POST to the url "../registrierung" - we are in 'static/registrierung'
+        // POST-Anfrage an den Pfad /registrierung senden 
         xhr.open("POST", "../registrierung", true);
-        // define that the content will be JSON (serialization)
+        // definiere den Inhalt als JSON-Objekt 
         xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        // prepare the structure of the message
+        // Vorbereiten der Struktur der Nachricht 
         var data_to_send = {
             benutzername: "",
             email: "",
             password: "",
         }
-        // Load from the inputfields on this page:
+        // Lade den Inhalt der Eingabefelder auf dieser Seite
         data_to_send.benutzername = document.getElementById("benutzername").value;
         data_to_send.email = document.getElementById("email").value;
         data_to_send.password = document.getElementById("password").value;

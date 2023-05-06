@@ -1,3 +1,5 @@
+<!--  Seite auf welcher sich der User anmelden kann. -->
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -16,11 +18,14 @@
 
     <!-- Navigationbar -->
     <nav>
+        <!-- Link der zurück zur Startseite führt. -->
         <ul id="navStartseite">
             <li><a href="index.html">To-Do App</a></li>
         </ul>
+        <!-- Verschieden Links die zur Startseite, Anmeldung oder Registrierung führen. -->
         <ul id="navLogin">
             <li><a  href="index.html">Startseite</a></li>
+            <!-- Hier wird die Klasse active verwendet um den User durch eine Farbe anzuzeigen auf welcher Seite er sich befindet. -->
             <li><a class="active" href="anmeldung.html">Anmelden</a></li>
             <li><a href="registrierung.html">Registrieren</a></li>
         </ul>
@@ -37,15 +42,18 @@
         <p>Bitte füllen Sie das Formular aus um sich anzumelden.</p>
         <hr>
        
+        <!-- Pfad /anmeldung dient dazu um in der Server.js mit einer Post-Methode (method="post") die Daten des Formualrs zu bearbeiten -->
         <form action="/anmeldung" method="post">
-
+             
+            <!-- Eingabefeld für die E-Mail -->
             <label for="email">E-Mail</label>
             <input type="text" id="email" name="email" placeholder="E-Mail eingeben">
 
+            <!-- Eingabefeld für das Passwort -->
             <label for="password">Passwort</label>
             <input type="password" id="password" name="password" placeholder="Passwort eingeben">
 
-
+            <!-- Button um die Daten der Eingabefelder zu übermitteln -->
             <div class="submitButton">
                 <button type="submit">Anmelden</button>
             </div>
@@ -58,18 +66,19 @@
     </div>
 
     <script>
-
+         
+        // Neue Http-Anfrage wird erstellt 
         var xhr = new XMLHttpRequest();
-        // define the type POST to the url "../anmeldung" - we are in 'static/anmeldung'
+        // POST Anfrage an den Pfad /anmeldung senden
         xhr.open("POST", "../anmeldung", true);
-        // define that the content will be JSON (serialization)
+        // definiere den Inhalt als JSON-Objekt 
         xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        // prepare the structure of the message
+        // Vorbereiten der Struktur der Nachricht 
         var data_to_send = {
             email: "",
             password: "",
         }
-        // Load from the inputfields on this page:
+        // Laden der Inhalte der Eingabefelder auf dieser Seite
         data_to_send.email = document.getElementById("email").value;
         data_to_send.password = document.getElementById("password").value;
 

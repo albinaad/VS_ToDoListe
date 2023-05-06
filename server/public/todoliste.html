@@ -1,3 +1,5 @@
+<!-- Zeigt eine Übersicht aller To-Do Listen des eingeloggten Users. -->
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -27,25 +29,28 @@
         <ul id="navStartseite">
             <li>To-Do App</li>
         </ul>
+        <!-- Formular welches zum Pfad /logout weiterleitet und mit der Methode 'GET' deklariert wurde (genauer in der Server.js) -->
         <form action="/logout" method="GET" id="ausloggenButton">
             <button type="submit" class="btn btn-light">Ausloggen</button>
         </form>
     </nav>
 
-     <!-- The container is for the theme / deisgn -->
      <main role="main" class="container">
 
         <br>
         <h1>Meine To-Do Listen</h1>
         <br>
-
+        <!-- Dieser Button führt bei einem Klick die Funktion loadDoc() aus -->
         <button type="button" onclick="loadDoc()" class="btn btn-outline-dark">Manuelles Laden</button>
         <br>
         <br>
         <br>
+        <!-- Container der das Formular zum Einladen eines Users zu eine Liste beihnhaltet. -->
         <div id="inviteDiv">
+            <!-- Button der das Formular öffnet -->
             <button id="inviteButton" class="btn btn-secondary">Benutzer einladen</button>
             <br>
+            <!-- Formualar in welchem man die Liste auswählen kann und die E-Mail eines Nutzer eingeben kann. -->
             <form id="inviteForm" style="display: none;">
                 <div class="form-group">
                     <label id="listLabel" for="listSelect">To-Do-Liste auswählen:</label>
@@ -55,136 +60,136 @@
                     <label id="emailLabel" for="userEmail">Benutzer-E-Mail-Adresse:</label>
                     <input type="email" class="form-control" id="userEmail" name="userEmail" required>
                 </div>
+                <!-- Bei anklicken dieses Buttons wird die inviteUser()-Funktion ausgeführt. -->
                 <button type="button" onclick="inviteUser()" id="einladenButton" class="btn btn-secondary">Einladen</button>
                 <button type="button" id="formSchliessen" class="btn btn-secondary">Schließen</button>
             </form>
         </div>
         <br><br>
         <div id="target">
-            <!-- Here will be the database displayed -->
+            <!-- Hir wird der Inhalt der Datenbank angezeigt-->
             Loading please wait...
         </div>
 
         <div id="alert">
-            <!-- Here will be the alerts displayed -->
+            <!-- Hier werden die Meldungen angezeigt -->
         </div>
 
 
         <script>
 
+            // Funktion die die Fehlermeldung schreibt. 
             function showErrorAlert(message) {
-                // Write error alert:
                 document.getElementById("alert").innerHTML = '<div class="alert alert-danger" role="alert">' + message + '</div>';
             }
 
+            // Funktion die eine erfolgreiche Meldung schreibt.
             function showSuccessAlert(message) {
-                // Write success alert:
                 document.getElementById("alert").innerHTML = '<div class="alert alert-success" role="alert">' + message + '</div>';
 
             }
 
 
-            // The loadDoc()-function will load the table into the defined space
+            // Die loadDoc()-Funktion lädt die Tabelle in den Target-Container
             function loadDoc() {
 
-                // Abfrage der User Id
+                // Laden der User ID aus der Session
                 var userId = sessionStorage.getItem('userId');
 
+                // Erstellen einer Htttp-Anfrage
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {
                     if (this.readyState == 4 && this.status == 200) {
-                        // debugger; // <- you can use the debugger for better developing in the browser
-                        // console.log(this.responseText); // this can also help durring debugging in the console of the browser
-                        // console.log(JSON.parse(this.responseText)); // even function output like JSON is visible in the browser console
-                        
-                        // Parse the JSON answer from the server:
+                        // Analysieren der JSON-Antwort vom Server
                         var row = JSON.parse(this.responseText);
                         console.log(row);
-                        // Start the HTML table that should be displayed:
+                        // Start der HTML Tabelle
                         var txt = "<table class='table table-hover'>";
-                        // add the table hader to it
+                        // Genriere Header der Tabelle
                         txt += "<tr><th scope='col'>Listen ID</th><th scope='col'>Title</th><th scope='col'>Aktion</th><th scope='col'></th></tr>"
-                        // Go through each row and add it to the table
+                        // Jede Zeile hinzufügen mit den jeweiligen Daten
                         for (var x in row) {
                          txt += "<tr><td>" + row[x].listeId + "</td><td>" + row[x].liste_title + "</td><td> <button class='btn btn-secondary' onclick='openList(" + row[x].listeId + ")'>Öffnen</button> </td><td> <button class='btn btn-danger' onclick='deleteRow(" + row[x].listeId + ")'>Löschen</button> </td></tr>";
                         }
-                        // Now add a input row to add a new entry:
+                        // Eingabefelder für einen neuen Eintrag
                         txt += "<tr><td></td><td><input id='liste_title' type='text' name='liste_title' class='form-control' placeholder='Titel eingeben.'></td><td> <button class='btn btn-secondary' onclick='addRow()'>Hinzufügen</button> </td><td></td></tr>"
-                        // end of the table:
+                        // Ende Tabelle
                         txt += "</table>"
-
+                        // Tabelle in den Container mit der ID 'target' einfügen
                         document.getElementById("target").innerHTML = txt;
                     }
                 };
 
-                // the "../" is required because we're in "static" folder!
+                // GET-Anfrage an den Pfad /todoliste senden 
                 xhttp.open("GET", "../todoliste" , true);
                 xhttp.send();
             }
-
+            
+            // Funktion die ausgeführt wenn man den 'Öffnen'-Button anklickt. Öffnet die Liste mit der jeweils mitgegebenen listeId
             function openList(listeId) {
                 sessionStorage.setItem('listeId', listeId);
                 window.location.href = "eintraege.html";
             }
 
-            // The deleteRow(id)-function will delete a row based on the given id. The "Delete"-Button will use this and give the ID to it.
+            // Die deleteRow(id)-Funktion löscht die Reihe mit der mitgegebenen ID. Der 'delete'-Button nutzt diese und gibt die ID mit.
             function deleteRow(id) {
+                // Erstellen einer Http-Anfrage
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {
                     if (this.readyState == 4 && this.status == 200) {
-                        // Parse the JSON answer from the server:
+                        // Analysieren der JSON-Antwort vom Server
                         var answer = JSON.parse(this.responseText);
-                        // Show success message:
+                        // Zeige Erfolgsmeldung
                         showSuccessAlert('Erfolgreich gelöscht!');
                         updateListDropdown();
                     } else if (this.readyState == 4 && this.status == 500) {
-                        // We got an error:
+                        // Fehler entsteht
                         var error = JSON.parse(this.responseText);
                         console.log("ERROR: ", error);
-                        // Show error alert:
+                        // Zeige Fehlermeldung
                         showErrorAlert('Eintrag konnte nicht gelöscht werden!');
                     }
-                    // reload table
+                    // Lade Tabelle erneut
                     loadDoc();
                 };
-                // the "../" is required because we're in "static" folder!
+                // DELETE Anfrage an den Pfad /todoliste senden und die id mitgeben
                 xhttp.open("DELETE", "../todoliste/" + id, true);
                 xhttp.send();
             }
 
-            // The addRow()-function will add a row to the table. It will use the "title" and "description" input field. All other fields will be added by the database (see server.js)
+            // Die addRow()-Funktion fügt eine neue Reihe hinzu. Genutzt werden die Inputfelder der Seite. Alle anderen Felder werden durch die Datenbank ergänzt (siehe server.js).
             function addRow() {
-                // construct an HTTP request
+                // Erstelle Http-Anfrage
                 var xhr = new XMLHttpRequest();
-                // define the type POST to the url "../database" - we are in 'static/database'
+                // POST Anfrage an den Pfad /todoliste senden
                 xhr.open("POST", "../todoliste", true);
-                // define that the content will be JSON (serialization)
+                // definiere den Inhalt als JSON-Objekt 
                 xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-                // prepare the structure of the message
+                // Vorbereiten der Struktur der Nachricht 
                 var data_to_send = {
                     liste_title: "",
                 }
-                // Load the title and description from the inputfields on this page:
+                // Lade den Inhalt der Eingabefelder auf dieser Seite
                 data_to_send.liste_title = document.getElementById("liste_title").value;
-                // send the collected data as JSON
+                // Die Daten als JSON senden
                 xhr.send(JSON.stringify(data_to_send));
 
-                // Handle the answer from the server:
+                // Antwort vom Server behandeln
                 xhr.onreadystatechange = function () {
                     if (this.readyState == 4 && this.status == 200) {
-                        // Parse the JSON answer from the server:
+                        // Analysieren der JSON-Antwort vom Server
                         var answer = JSON.parse(this.responseText);
-                        // Show success message:
+                        // Zeige Erfolgsmeldung
                         showSuccessAlert('Eintrag erfolgreich hinzugefügt!');
                         updateListDropdown();
                     } else if (this.readyState == 4 && this.status == 500) {
-                        // We got an error:
+                        // Fehler entsteht:
                         var error = JSON.parse(this.responseText);
                         console.log("ERROR: ", error);
-                        // Show error alert:
+                        // Zeige Fehlermeldung
                         showErrorAlert('Fehler beim hinzufügen!');
                     }
-                    // reload table
+                    // Lade Tabelle erneut
                     loadDoc();
                 };
 
@@ -207,11 +212,11 @@
             function fillListSelect() {
             // Abfrage der User Id
             var userId = sessionStorage.getItem('userId');
-
+            // Erstelle Http-Anfrage
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
               if (this.readyState == 4 && this.status == 200) {
-              // Parse the JSON answer from the server:
+              // Analysieren der JSON-Antwort vom Server
               var row = JSON.parse(this.responseText);
               // Fülle die Dropdown-Liste mit den Listen
               var listSelect = document.getElementById("listSelect");
@@ -223,22 +228,23 @@
               });
              }
             };
-           // the "../" is required because we're in "static" folder!
+           // GET Anfrage an den Pfad /todoliste senden
            xhttp.open("GET", "../todoliste", true);
            xhttp.send();
           }
-
+          
+          // Updated die Dropdown Liste wenn eine neue Liste hinzugefügt wird.
           function updateListDropdown() {
           var select = document.getElementById("listSelect");
           select.innerHTML = "";
 
-          // fetch the latest list data from the server
+          // Erstelle Http-Anfrage
           var xhttp = new XMLHttpRequest();
           xhttp.onreadystatechange = function () {
            if (this.readyState == 4 && this.status == 200) {
-            // Parse the JSON answer from the server:
+            // Analysieren der JSON-Antwort vom Server
             var lists = JSON.parse(this.responseText);
-            // add each list as an option to the select element
+            // Füge jede Liste als Option zum Dropdown Menü hinzu
             for (var i = 0; i < lists.length; i++) {
                 var option = document.createElement("option");
                 option.value = lists[i].listeId;
@@ -247,41 +253,42 @@
             }
            }
           };  
+          // GET Anfrage an den Pfad /todoliste senden 
           xhttp.open("GET", "../todoliste", true);
           xhttp.send();
          }
 
          function inviteUser() {
-                // construct an HTTP request
+                // Erstelle Http-Anfrage
                 var xhr = new XMLHttpRequest();
-                // define the type POST to the url "../database" - we are in 'static/database'
+                // POST Anfrage an den Pfad /invite senden 
                 xhr.open("POST", "../invite", true);
-                // define that the content will be JSON (serialization)
+                // definiere den Inhalt als JSON-Objekt
                 xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-                // prepare the structure of the message
+                // Vorbereiten der Struktur der Nachricht 
                 var data_to_send = {
                     userEmail: "",
                     listSelect: "",
                 }
-                // Load the title and description from the inputfields on this page:
+                // Lade den Inhalt der Eingabefelder auf dieser Seite
                 data_to_send.userEmail = document.getElementById("userEmail").value;
                 data_to_send.listSelect = document.getElementById("listSelect").value;
-                // send the collected data as JSON
+                // Daten als JSON senden
                 xhr.send(JSON.stringify(data_to_send));
 
-                // Handle the answer from the server:
+                // Antwort vom Server behandeln
                 xhr.onreadystatechange = function () {
                     if (this.readyState == 4 && this.status == 200) {
-                        // Parse the JSON answer from the server:
+                        // Analysieren der JSON-Antwort vom Server
                         var answer = JSON.parse(this.responseText);
-                        // Show success message:
+                        // Zeige Erfolgsmeldung
                         showSuccessAlert('Nutzer hinzugefügt!');
                         document.getElementById("inviteForm").style.display = "none";
                     } else if (this.readyState == 4 && this.status == 500) {
-                        // We got an error:
+                        // Fehler ensteht
                         var error = JSON.parse(this.responseText);
                         console.log("ERROR: ", error);
-                        // Show error alert:
+                        // Zeige Fehlermeldung
                         showErrorAlert('Fehler beim hinzufügen!');
                     }
                 };
@@ -289,14 +296,14 @@
             }
 
 
-            // Füllen Sie die Dropdown-Liste, wenn die Seite geladen wird
+            // Fülle die Dropdown-Liste, wenn die Seite geladen wird
             fillListSelect();
 
-            // load the table at the start
+            // Lade Tabelle beim Sart
             loadDoc();
         </script>
 
-    </main><!-- /.container -->
+    </main>
     
 </body>
 </html>

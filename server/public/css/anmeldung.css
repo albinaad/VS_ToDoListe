@@ -1,3 +1,4 @@
+/* CSS für die Seite Anmeldung.html */
 body {
     background-image: url("../img/background.jpg");
     background-size: cover;
@@ -5,16 +6,19 @@ body {
 
 * {box-sizing: border-box}
 
+/* Schrift die mit dem h1 HTML-Tag verwendet wird */
 h1 {
     font-size: 30px;
     padding-top: 8px;
 }
 
+/* Trennelement */
 hr {
     border: 0.9px solid #000000;
     margin-bottom: 25px;
 }
 
+/* Gestaltung des Div-Containers mit der Klasse anmeldeformular */
 .anmeldeformular {
     background-color: rgba(255,255,255,0.8);
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
@@ -25,6 +29,7 @@ hr {
     border-radius: 20px;
 }
 
+/* Gestaltung der Input Felder */
 input[type=text], input[type=password] {
     width: 100%;
     padding: 15px;
@@ -36,15 +41,18 @@ input[type=text], input[type=password] {
     border: none;
 }
 
+/* Gestaltung des Focus der Input Felder */
 input[type=text]:focus, input[type=password]:focus {
     background-color: #ededed;
     outline: none;
 }
 
+/* Gestaltung der Objekte mit dem Label HTML-Tag */
 label {
     font-size: small;
 }
 
+/* Gestaltung der Objekte mit dem Button HTML-Tag */
 button {
     background-color: #333333;
     color: white;
@@ -57,18 +65,22 @@ button {
     border-radius: 10px;
 }
 
+/* Gestaltung des Buttons, wenns mit der Maus rübergefahren wird */
 button:hover {
     opacity:1;
 }
-  
+
+/* Gestaltung der Links auf der Website */
 a {
     color: black;
 }
 
+/* Gestaltung der Links, wenn mit der Maus rübergefahren wird */
 a:hover {
     color: steelblue;
 }
-  
+
+/* Gestaltung des Div-Containers mit der Klasse accountNichtVorhanden */
 .accountNichtVorhanden {
     text-align: center;
     margin-top: 15px;

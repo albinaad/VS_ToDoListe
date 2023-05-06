@@ -1,3 +1,4 @@
+/* CSS Index.html */
 body {
     background-image: url("../img/background.jpg");
     background-size: cover;
@@ -7,38 +8,38 @@ body {
     position: relative;
     width: 100%;
     height: 25em;
-  }
+}
   
-  .textblock{
+.textblock{
     position: absolute;
     top: 20%;
     width: 100%;
     text-align: center;
     background-color: none;
     color: black;
-  }
+}
   
-  .textblock h4 {
+.textblock h4 {
     font-size: 50px;
     padding: 5px;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-  }
+}
   
-  .textblock p {
+.textblock p {
     font-size: 18px;
     padding: 5px;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-  }
+}
 
-  #willkommenZeileDrei {
+#willkommenZeileDrei {
     font-size: 16px;
-  }
+}
   
-  .textblock a {
+.textblock a {
     color: rgb(38, 36, 36);
     text-decoration: underline;
-  }
+}
 
-  a:hover {
+a:hover {
     color: steelblue;
-  }
+}

@@ -1,5 +1,6 @@
 version: '3.3'
 services:
+  # Nginx Container - Reserve Proxy
   nginx:
     image: nginx:latest
     volumes:
@@ -8,10 +9,9 @@ services:
       - server
     ports:
       - 8080:8080
+  # Server Container
   server:
     build: server
-    #ports:
-    # - "8080:8080"
     restart: always
     environment:
       MYSQL_DATABASE: exampledb
@@ -22,10 +22,10 @@ services:
       - meinecooledb
     depends_on:
       - meinecooledb
+    # Scale: auf 3 definiert, somit werden 3 Server Container erstellt
     scale: 3
+  # Datenbank Container
   meinecooledb:
-    # Use of a modified datbase in 'db'-folder.
-    # See README.md for more information.
     build: db
     restart: always
     environment:
@@ -33,6 +33,7 @@ services:
       MYSQL_USER: exampleuser
       MYSQL_PASSWORD: examplepass
       MYSQL_RANDOM_ROOT_PASSWORD: '1'
+  # Phpmyadmin Container, erreichbar durch den Port 8085. Dort können Änderungen an der Datenbank vorgenommen werden.
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     restart: always
